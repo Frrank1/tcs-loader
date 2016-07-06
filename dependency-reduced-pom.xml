@@ -84,7 +84,7 @@
         <updatePolicy>always</updatePolicy>
       </snapshots>
       <id>temp-maven-repo</id>
-      <url>https://github.com/standlove/temp-maven-repo/raw/master</url>
+      <url>https://github.com/appirio-tech/temp-maven-repo/raw/master</url>
     </repository>
   </repositories>
   <distributionManagement>

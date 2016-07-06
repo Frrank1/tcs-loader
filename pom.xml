@@ -119,7 +119,7 @@
 
 		<repository>
 		      <id>temp-maven-repo</id>
-			  <url>https://github.com/standlove/temp-maven-repo/raw/master</url>
+			  <url>https://github.com/appirio-tech/temp-maven-repo/raw/master</url>
 		      <snapshots>
 		          <enabled>true</enabled>
 		          <updatePolicy>always</updatePolicy>
