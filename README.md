@@ -1,23 +1,4 @@
-### 1. Prepare Temp Maven Repo
-The following custom jar need to be added to the [temp-maven-repo](https://github.com/appirio-tech/temp-maven-repo) first:
-* logging - the topcoder logging jar
-
-You can find it in the `test_files/mvn-repo` directory. 
-
-For local testing, you can fork the [temp-maven-repo](https://github.com/appirio-tech/temp-maven-repo), and then add the jar above to it. 
-Then change the repository url of the temp-maven-repo to your forked repo in the `pom.xml` file as below:
-```xml
-<repository>
-    <id>temp-maven-repo</id>
-    <url>https://github.com/standlove/temp-maven-repo/raw/master</url>
-    <snapshots>
-        <enabled>true</enabled>
-        <updatePolicy>always</updatePolicy>
-    </snapshots>
-</repository>
-```
-
-### 2. Prepare Informix Database
+### Prepare Informix Database
 Execute the command below to start the informix docker:
 ```sh
 docker run -itd -p 2021:2021 --name tc-informix appiriodevops/informix:1.2
@@ -34,7 +15,7 @@ And the `env.topcoder.com` is the hostname of the database server used in the tc
 Then connect to the database, and execute the `test_files/test-data.sql` to insert some test data. 
 Note that for the `calendar` test data, you need to change it to use today's values. 
 
-### 3. Execute TCS Loader
+### Execute TCS Loader
 Execute the following command to create the tcs-loader jar:
 ```sh
 mvn clean package
