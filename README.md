@@ -1,15 +1,23 @@
 ### Prepare Informix Database
 Execute the command below to start the informix docker:
 ```sh
-docker run -itd -p 2021:2021 --name tc-informix appiriodevops/informix:1.2
+docker run -itd -p 2021:2021 --name tc-informix appiriodevops/informix:1b3d4ef
 ```
 
 Then add an entry to your hosts file like below:
+
+For Windows, and Mac
 ```
 192.168.99.100  env.topcoder.com
 ```
 
-The `192.168.99.100` is the ip of my docker box hosting the tc-informix container, you need to replace it with yours.
+For Linux
+```
+127.0.0.1  env.topcoder.com
+```
+
+
+The `192.168.99.100` or `127.0.0.1` is the ip of my docker box hosting the tc-informix container, you need to replace it with yours.
 And the `env.topcoder.com` is the hostname of the database server used in the tcs loader. 
 
 Then connect to the database, and execute the `test_files/test-data.sql` to insert some test data. 
