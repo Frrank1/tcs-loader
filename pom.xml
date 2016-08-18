@@ -60,9 +60,10 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.informix.jdbc</groupId>
-			<artifactId>com.springsource.com.informix.jdbc</artifactId>
+			<artifactId>com.springsource.com.informix.jdbcx</artifactId>
 			<version>3.0.0.JC3</version>
 		</dependency>
+
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
@@ -80,6 +81,12 @@
 		    <artifactId>logging</artifactId>
 		    <version>1.0.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.amazon</groupId>
+			<artifactId>redshift.jdbc42</artifactId>
+			<version>1.1.17.1017</version>
+		</dependency>
+		
 		
 	</dependencies>
 

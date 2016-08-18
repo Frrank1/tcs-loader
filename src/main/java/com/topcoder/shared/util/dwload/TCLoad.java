@@ -23,6 +23,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Hashtable;
+import java.util.Properties;
 
 public abstract class TCLoad {
     private static Logger log = Logger.getLogger(TCLoad.class);
@@ -182,9 +183,14 @@ public abstract class TCLoad {
 
         String urlstr = (String) fDatabaseURLs.get(index);
         Connection conn = DriverManager.getConnection(urlstr);
-        PreparedStatement ps = conn.prepareStatement("set lock mode to wait 5");
-        ps.execute();
-        ps.close();
+
+	if (urlstr.startsWith("jdbc:informix-sqli")) {
+		// Special preparation command for Informix
+		PreparedStatement ps = conn.prepareStatement("set lock mode to wait 5");
+		ps.execute();
+		ps.close();
+	}
+
         if(index == SOURCE_DB) {
             setSourceConnection(conn);
         } else if(index == TARGET_DB) {
