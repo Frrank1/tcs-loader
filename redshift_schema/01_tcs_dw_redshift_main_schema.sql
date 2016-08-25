@@ -24,7 +24,7 @@ CREATE TABLE log_type_lu (
 create table update_log (
     log_id INT not null,
     calendar_id DECIMAL(10,0),
-    timestamp TIMESTAMP,
+    log_timestamp TIMESTAMP,
     log_type_id DECIMAL(3,0)
 );
 

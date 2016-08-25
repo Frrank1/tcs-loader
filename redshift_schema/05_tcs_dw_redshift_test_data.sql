@@ -677,4 +677,4 @@ INSERT INTO calendar (calendar_id, year, month_numeric, month_alpha, day_of_mont
 (3500, 2016, 12, 'December', 30, 5, 'Friday', '2016-12', '52', '365', 'N', 'N', '2016-12-30', '2016', null),
 (3501, 2016, 12, 'December', 31, 6, 'Saturday', '2016-12', '52', '366', 'N', 'N', '2016-12-31', '2016', null);
 
-INSERT INTO update_log (log_id, calendar_id, "timestamp", log_type_id) values (1, 2892, '2001-12-01 00:00:01.000', 4);
+INSERT INTO update_log (log_id, calendar_id, log_timestamp, log_type_id) values (1, 2892, '2001-12-01 00:00:01.000', 4);

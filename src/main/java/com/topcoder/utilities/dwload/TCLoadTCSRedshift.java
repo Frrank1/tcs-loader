@@ -324,7 +324,7 @@ public class TCLoadTCSRedshift extends TCLoad {
         StringBuffer query;
 
         query = new StringBuffer(100);
-        query.append("select timestamp from update_log where log_id = ");
+        query.append("select log_timestamp from update_log where log_id = ");
         query.append("(select max(log_id) from update_log where log_type_id = " + TCS_LOG_TYPE + ")");
 
         try {
@@ -361,7 +361,7 @@ public class TCLoadTCSRedshift extends TCLoad {
             query.append("INSERT INTO update_log ");
             query.append("      (log_id ");        // 1
             query.append("       ,calendar_id ");  // 2
-            query.append("       ,timestamp ");   // 3
+            query.append("       ,log_timestamp ");   // 3
             query.append("       ,log_type_id) ");   // 4
             query.append("VALUES (0, ?, ?, ").append(TCS_LOG_TYPE).append(")");
             psUpd = prepareStatement(query.toString(), TARGET_DB);
