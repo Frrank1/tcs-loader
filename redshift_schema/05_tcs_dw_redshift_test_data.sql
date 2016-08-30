@@ -11,7 +11,7 @@ create table calendar (
     day_of_year DECIMAL(3,0),
     holiday CHAR(1),
     weekend CHAR(1),
-    "date" DATE,
+    "date" timestamp,
     week_year DECIMAL(4,0),
     quarter_of_year DECIMAL(1,0)
 );
