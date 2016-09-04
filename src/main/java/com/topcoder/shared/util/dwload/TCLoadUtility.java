@@ -27,7 +27,9 @@ import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Set;
 
 public class TCLoadUtility {
     private static Logger log = Logger.getLogger(TCLoadUtility.class);
@@ -42,6 +44,21 @@ public class TCLoadUtility {
      * to the databases.
      */
     private static String sDriverName = "com.informix.jdbc.IfxDriver";
+
+    /**
+     * This variable holds the stage of the load process.
+     */
+    private static String stage = null;
+
+    /**
+     * This variable holds the start time of the load process.
+     */
+    private static java.sql.Timestamp startTime = null;
+
+    /**
+     * This variable holds the last log time of the load process.
+     */
+    private static java.sql.Timestamp lastLogTime = null;
 
     /**
      * The main method parses the command line options (or XML file when we
@@ -115,20 +132,33 @@ public class TCLoadUtility {
 
             checkDriver();
 
-            Hashtable params = null;
+            // Build new Hashtable for this load
+            Hashtable params = new Hashtable();
+            params.put("sourcedb", sourceDBURL);
+            params.put("targetdb", targetDBURL);
+
             for (; i < nl.getLength(); i += 2) {
                 Node n = nl.item(i);
-
-                // Build new Hashtable for this load
-                params = new Hashtable();
-                if (sourceDBURL != null)
-                    params.put("sourcedb", sourceDBURL);
-                if (targetDBURL != null)
-                    params.put("targetdb", targetDBURL);
-
                 fillParams(params, n);
-                runTCLoad((String) params.get("load"), params);
             }
+
+            // Get start timestamp
+            startTime = new java.sql.Timestamp(System.currentTimeMillis());
+
+            // Run Pre Loader
+            stage = "PRE";
+            runTCLoad((String) params.get("preload"), params);
+
+            // Run Individual Loaders
+            stage = "LOAD";
+            for (String className : (Set<String>) params.get("load")) {
+                runTCLoad(className, params);
+            }
+
+            // Run Post Loaders
+            stage = "POST";
+            runTCLoad((String) params.get("postload"), params);
+
         } catch (Exception ex) {
             ex.printStackTrace();
             sErrorMsg.setLength(0);
@@ -143,49 +173,52 @@ public class TCLoadUtility {
      * parameters passed to the load. We then pass that off to
      * runTCLoad.
      */
-    private static void fillParams(Hashtable params, Node n) throws Exception {
-        NodeList nl = n.getChildNodes();
-        Node node;
-        int i = 1;
+    private static void fillParams(Hashtable params, Node node) throws Exception {
+        if (node != null) {
 
-        // Check to see if we have a sourceDBURL or targetDBURL prior to loadlist.
-        // Again, we need to skip over the #text nodes to get to the right children
-        if (i < nl.getLength()) {
-            node = nl.item(i);
-            if (node.getNodeName().equals("sourcedb")) {
-                params.put("sourcedb", node.getFirstChild().getNodeValue());
-                i += 2;
+            if (node.getNodeName().equals("preload")) {
+                String className = node.getChildNodes().item(1).getFirstChild().getNodeValue();
+                params.put("preload", className);
             }
-        }
 
-        if (i < nl.getLength()) {
-            node = nl.item(i);
-            if (node.getNodeName().equals("targetdb")) {
-                params.put("targetdb", node.getFirstChild().getNodeValue());
-                i += 2;
+            if (node.getNodeName().equals("postload")) {
+                String className = node.getChildNodes().item(1).getFirstChild().getNodeValue();
+                params.put("postload", className);
             }
-        }
 
-        if (i < nl.getLength()) {
-            node = nl.item(i);
-            if (node.getNodeName().equals("classname")) {
-                params.put("load", node.getFirstChild().getNodeValue());
-                i += 2;
-            }
-        }
+            if (node.getNodeName().equals("load")) {
+                NodeList loadChildren = node.getChildNodes();
+                for (int i = 1; i < loadChildren.getLength(); i += 2) {
+                    Node child = loadChildren.item(i);
 
-        if (i < nl.getLength()) {
-            node = nl.item(i);
-            if (node.getNodeName().equals("parameterList")) {
-                NodeList nl2 = node.getChildNodes();
-                for (int j = 1; j < nl2.getLength(); j += 2) {
-                    Node n2 = nl2.item(j);
-                    NamedNodeMap nnm = n2.getAttributes();
-                    params.put(nnm.getNamedItem("name").getNodeValue(),
-                            nnm.getNamedItem("value").getNodeValue());
+                    // CHILD NODE: classList
+                    if (child.getNodeName().equals("classList")) {
+                        NodeList classList = child.getChildNodes();
+                        Set<String> classes = new HashSet<>();
+
+                        for (int j = 1; j < classList.getLength(); j += 2) {
+                            if (!classList.item(j).getNodeName().equals("classname"))
+                                continue;
+                            String className = classList.item(j).getFirstChild().getNodeValue();
+                            classes.add(className);
+                        }
+                        params.put("load", classes);
+                    }
+
+                    // CHILD NODE: parameterList
+                    if (child.getNodeName().equals("parameterList")) {
+                        NodeList classList = child.getChildNodes();
+                        for (int j = 1; j < classList.getLength(); j += 2) {
+                            NamedNodeMap attr = classList.item(j).getAttributes();
+                            params.put(attr.getNamedItem("name").getNodeValue(),
+                                    attr.getNamedItem("value").getNodeValue());
+                        }
+                    }
                 }
             }
+
         }
+
     }
 
     /**
@@ -196,7 +229,7 @@ public class TCLoadUtility {
         if (loadclass == null) {
             sErrorMsg.setLength(0);
             sErrorMsg.append("Please specify a load to run using the -load option.");
-            fatal_error();
+            fatal_error(false);
         }
 
         Class loadme = null;
@@ -229,14 +262,14 @@ public class TCLoadUtility {
             sErrorMsg.setLength(0);
             sErrorMsg.append(loadclass + " is not an instance of TCLoad. You must ");
             sErrorMsg.append("extend TCLoad to create a TopCoder database load.");
-            fatal_error();
+            fatal_error(false);
         }
 
         TCLoad load = (TCLoad) ob;
         if (!load.setParameters(params)) {
             sErrorMsg.setLength(0);
             sErrorMsg.append(load.getReasonFailed());
-            fatal_error();
+            fatal_error(false);
         }
 
         setDatabases(load, params);
@@ -303,7 +336,19 @@ public class TCLoadUtility {
         }
 
         try {
+            if (stage.equals("POST")) {
+                tcload.setfStartTime(startTime);
+            }
+            else if (stage.equals("LOAD")) {
+                tcload.setfLastLogTime(lastLogTime);
+            }
+
             tcload.performLoad();
+
+            if (stage.equals("PRE")) {
+                lastLogTime = tcload.getfLastLogTime();
+            }
+
         } catch (Exception e) {
             sErrorMsg.setLength(0);
             sErrorMsg.append(tcload.getReasonFailed());
@@ -329,7 +374,7 @@ public class TCLoadUtility {
                 sErrorMsg.setLength(0);
                 sErrorMsg.append("Argument " + (i + 1) + " (" + args[i] +
                         ") should start with a -.");
-                fatal_error();
+                fatal_error(true);
             }
 
             String key = args[i].substring(1);
@@ -361,7 +406,7 @@ public class TCLoadUtility {
         sErrorMsg.append("   -load class   : Classname of load to run.\n");
         sErrorMsg.append("   -sourcedb URL : URL of source database.\n");
         sErrorMsg.append("   -targetdb URL : URL of target database.\n");
-        fatal_error();
+        fatal_error(true);
     }
 
     protected static void setDatabases(TCLoad load, Hashtable params) {
@@ -378,18 +423,18 @@ public class TCLoadUtility {
         load.setTargetDBURL(tmp);
     }
 
-    private static void fatal_error() {
+    private static void fatal_error(boolean exit) {
         log.error("*******************************************");
         log.error("FAILURE: " + sErrorMsg.toString());
         log.error("*******************************************");
-        System.exit(-1);
+        if (exit) System.exit(-1);
     }
 
     private static void fatal_error(Exception e) {
         log.error("*******************************************");
         log.error("FAILURE: ", e);
         log.error("*******************************************");
-        System.exit(-1);
+        // System.exit(-1);
     }
 
     /**
@@ -405,7 +450,7 @@ public class TCLoadUtility {
             sErrorMsg.append("Unable to load driver ");
             sErrorMsg.append(sDriverName);
             sErrorMsg.append(". Cannot continue.");
-            fatal_error();
+            fatal_error(true);
         }
     }
 }
