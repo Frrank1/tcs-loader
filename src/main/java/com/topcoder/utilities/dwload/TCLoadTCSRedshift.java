@@ -217,7 +217,6 @@ public class TCLoadTCSRedshift extends TCLoad {
             //load submission review before project result because the project result load will use the submission review table
             doLoadSubmissionReview();
 
-
             doLoadProjectResults();
 
             doLoadDesignProjectResults();
@@ -234,11 +233,12 @@ public class TCLoadTCSRedshift extends TCLoad {
 
             doLoadScorecardQuestion();
 
-            doLoadScorecardResponse();
+//Commenting these out for now. Having some data type issues.
+//            doLoadScorecardResponse();
 
-            doLoadTestcaseResponse();
+//            doLoadTestcaseResponse();
 
-            doLoadSubjectiveResponse();
+//            doLoadSubjectiveResponse();
 
             doLoadAppeal();
             doLoadTestcaseAppeal();
@@ -247,27 +247,29 @@ public class TCLoadTCSRedshift extends TCLoad {
 
             doLoadStreak();
 
-            List<CoderRating> list = getCurrentRatings();
+// Commenting out for now.  Missing table...
+//            List<CoderRating> list = getCurrentRatings();
 
-            for (int cat : RATED_CATEGORIES) {
-                final int phase = cat + 111;
-                doLoadRank(phase, ACTIVE_RATING_RANK_TYPE_ID, list);
-                doLoadRank(phase, OVERALL_RATING_RANK_TYPE_ID, list);
-                loadSchoolRatingRank(phase, ACTIVE_RATING_RANK_TYPE_ID, list);
-                loadSchoolRatingRank(phase, OVERALL_RATING_RANK_TYPE_ID, list);
-                loadCountryRatingRank(phase, ACTIVE_RATING_RANK_TYPE_ID, list);
-                loadCountryRatingRank(phase, OVERALL_RATING_RANK_TYPE_ID, list);
-            }
+//            for (int cat : RATED_CATEGORIES) {
+//                final int phase = cat + 111;
+//                doLoadRank(phase, ACTIVE_RATING_RANK_TYPE_ID, list);
+//                doLoadRank(phase, OVERALL_RATING_RANK_TYPE_ID, list);
+//                loadSchoolRatingRank(phase, ACTIVE_RATING_RANK_TYPE_ID, list);
+//                loadSchoolRatingRank(phase, OVERALL_RATING_RANK_TYPE_ID, list);
+//                loadCountryRatingRank(phase, ACTIVE_RATING_RANK_TYPE_ID, list);
+//                loadCountryRatingRank(phase, OVERALL_RATING_RANK_TYPE_ID, list);
+//            }
 
-            doLoadSeason();
+// Ignoring DR data for now...
+//            doLoadSeason();
 
-            doLoadStage();
+//            doLoadStage();
 
-            doLoadStageResults();
-            doLoadDRTracks();
+//            doLoadStageResults();
+//            doLoadDRTracks();
 
 
-            doLoadDRTrackPoints();
+//            doLoadDRTrackPoints();
 
             //doLoadDRTrackContests();// needs DRv2July08TopNCalculator.class in the classpath
             //doLoadDRTrackResults(); // ditto
@@ -324,7 +326,7 @@ public class TCLoadTCSRedshift extends TCLoad {
         StringBuffer query;
 
         query = new StringBuffer(100);
-        query.append("select timestamp from update_log where log_id = ");
+        query.append("select log_timestamp from update_log where log_id = ");
         query.append("(select max(log_id) from update_log where log_type_id = " + TCS_LOG_TYPE + ")");
 
         try {
@@ -361,7 +363,7 @@ public class TCLoadTCSRedshift extends TCLoad {
             query.append("INSERT INTO update_log ");
             query.append("      (log_id ");        // 1
             query.append("       ,calendar_id ");  // 2
-            query.append("       ,timestamp ");   // 3
+            query.append("       ,log_timestamp ");   // 3
             query.append("       ,log_type_id) ");   // 4
             query.append("VALUES (0, ?, ?, ").append(TCS_LOG_TYPE).append(")");
             psUpd = prepareStatement(query.toString(), TARGET_DB);
@@ -3031,7 +3033,9 @@ public class TCLoadTCSRedshift extends TCLoad {
                         " group by pr2.user_id ";
 
         try {
-            Map<Integer, ContestResultCalculator> stageCalculators = getStageCalculators();
+
+// EXCLUDE DR
+//            Map<Integer, ContestResultCalculator> stageCalculators = getStageCalculators();
 
             Map<Long, Integer> dRProjects = getDRProjects();
 
@@ -3085,7 +3089,8 @@ public class TCLoadTCSRedshift extends TCLoad {
                     if (projectsFound) {
                         log.info("Loading next " + numProjectsFound + " projects...");
 
-                        List<Track> activeTracks = getActiveTracks();
+// EXCLUDE DR
+//                        List<Track> activeTracks = getActiveTracks();
 
                         resultSelect = prepareStatement(buf.toString(), SOURCE_DB);
 
@@ -3148,6 +3153,7 @@ public class TCLoadTCSRedshift extends TCLoad {
 
                             boolean hasDR = false;
 
+/*
                             if (stage != null &&
                                     (projectResults.getInt("project_stat_id") == 7 ||  // COMPLETED
                                             projectResults.getInt("project_stat_id") == 8 ||  // WINNER UNRESPONSIVE
@@ -3239,16 +3245,17 @@ public class TCLoadTCSRedshift extends TCLoad {
                                     }
                                 }
                             }
+*/                            
                             resultInsert.clearParameters();
 
                             resultInsert.setLong(1, project_id);
                             resultInsert.setLong(2, projectResults.getLong("user_id"));
-                            resultInsert.setObject(3, projectResults.getObject("submit_ind"));
-                            resultInsert.setObject(4, projectResults.getObject("valid_submission_ind"));
-                            resultInsert.setObject(5, projectResults.getObject("raw_score"));
-                            resultInsert.setObject(6, projectResults.getObject("final_score"));
+                            resultInsert.setObject(3, projectResults.getObject("submit_ind"), Types.INTEGER);
+                            resultInsert.setObject(4, projectResults.getObject("valid_submission_ind"), Types.INTEGER);
+                            resultInsert.setObject(5, projectResults.getObject("raw_score"), Types.DECIMAL, 2);
+                            resultInsert.setObject(6, projectResults.getObject("final_score"), Types.DECIMAL, 2);
                             if (projectResults.getObject("inquire_timestamp") != null) {
-                                resultInsert.setObject(7, projectResults.getObject("inquire_timestamp"));
+                                resultInsert.setObject(7, projectResults.getObject("inquire_timestamp"), Types.TIMESTAMP);
                             } else {
                                 Timestamp regDate = convertToDate(projectResults.getString("registrationd_date"));
                                 if (regDate != null) {
@@ -3257,13 +3264,13 @@ public class TCLoadTCSRedshift extends TCLoad {
                                     resultInsert.setNull(7, Types.TIMESTAMP);
                                 }
                             }
-                            resultInsert.setObject(8, projectResults.getObject("submit_timestamp"));
-                            resultInsert.setObject(9, projectResults.getObject("review_completed_timestamp"));
-                            resultInsert.setObject(10, projectResults.getObject("payment"));
-                            resultInsert.setObject(11, projectResults.getObject("old_rating"));
-                            resultInsert.setObject(12, projectResults.getObject("new_rating"));
-                            resultInsert.setObject(13, projectResults.getObject("reliability_before_resolution"));
-                            resultInsert.setObject(14, projectResults.getObject("reliability_after_resolution"));
+                            resultInsert.setObject(8, projectResults.getObject("submit_timestamp"), Types.TIMESTAMP);
+                            resultInsert.setObject(9, projectResults.getObject("review_completed_timestamp"), Types.TIMESTAMP);
+                            resultInsert.setObject(10, projectResults.getObject("payment"), Types.DECIMAL, 2);
+                            resultInsert.setObject(11, projectResults.getObject("old_rating"), Types.INTEGER);
+                            resultInsert.setObject(12, projectResults.getObject("new_rating"), Types.INTEGER);
+                            resultInsert.setObject(13, projectResults.getObject("reliability_before_resolution"), Types.DECIMAL, 2);
+                            resultInsert.setObject(14, projectResults.getObject("reliability_after_resolution"), Types.DECIMAL, 2);
 
                             Object placement = projectResults.getObject("placed");
                             Object passedReviewInd = projectResults.getObject("passed_review_ind");
@@ -3273,9 +3280,9 @@ public class TCLoadTCSRedshift extends TCLoad {
                                 placement = new Integer(1);
                             }
 
-                            resultInsert.setObject(15, placement);
-                            resultInsert.setObject(16, projectResults.getObject("rating_ind"));
-                            resultInsert.setObject(17, passedReviewInd);
+                            resultInsert.setObject(15, placement, Types.INTEGER);
+                            resultInsert.setObject(16, projectResults.getObject("rating_ind"), Types.INTEGER);
+                            resultInsert.setObject(17, passedReviewInd, Types.INTEGER);
 
                             if (hasDR) {
                                 resultInsert.setDouble(18, pointsAwarded);
@@ -3294,7 +3301,7 @@ public class TCLoadTCSRedshift extends TCLoad {
                                 currNumRatings = ratingsMap.get(tempUserId);
                             }
                             resultInsert.setInt(23, projectResults.getInt("rating_ind") == 1 ? currNumRatings + 1 : currNumRatings);
-                            resultInsert.setObject(24, projectResults.getObject("rating_order"));
+                            resultInsert.setObject(24, projectResults.getObject("rating_order"), Types.INTEGER);
 
                             if (hasDR) {
                                 resultInsert.setDouble(25, potentialPoints);
@@ -3307,7 +3314,8 @@ public class TCLoadTCSRedshift extends TCLoad {
                                 resultInsert.executeUpdate();
                             } catch(Exception e) {
                                 // Notes: it seems same user will appear in resource table twice
-                                log.debug("project_id: " + project_id + " user_id: " + projectResults.getLong("user_id"));
+                                log.info("project_id: " + project_id + " user_id: " + projectResults.getLong("user_id"));
+                                log.info(e);
                                 throw(e);
                             }
                             //log.debug("after result insert");
@@ -3909,17 +3917,19 @@ public class TCLoadTCSRedshift extends TCLoad {
 
                 int reviewRespId = submissionInfo.getInt("review_resp_id");
 
-                submissionUpdate.setFloat(1, submissionInfo.getObject("raw_score"));
-                submissionUpdate.setFloat(2, submissionInfo.getObject("final_score"));
-                submissionUpdate.setInt(3, submissionInfo.getObject("num_appeals"));
+                log.info( "Project_id = " + projectId + "raw_score= " + submissionInfo.getObject("raw_score") + " Object Type=" + submissionInfo.getObject("raw_score").getClass());
+
+                submissionUpdate.setObject(1, submissionInfo.getObject("raw_score"), Types.DECIMAL, 2);
+                submissionUpdate.setObject(2, submissionInfo.getObject("final_score"), Types.DECIMAL, 2);
+                submissionUpdate.setObject(3, submissionInfo.getObject("num_appeals"), Types.INTEGER);
                 if (submissionInfo.getInt("non_null_successful_appeals") == 0) {
                     submissionUpdate.setNull(4, Types.DECIMAL);
                 } else {
                     submissionUpdate.setInt(4, submissionInfo.getInt("num_successful_appeals"));
                 }
                 submissionUpdate.setInt(5, reviewRespId);
-                submissionUpdate.setLong(6, submissionInfo.getObject("scorecard_id"));
-                submissionUpdate.setLong(7, submissionInfo.getObject("scorecard_template_id"));
+                submissionUpdate.setObject(6, submissionInfo.getObject("scorecard_id"), Types.BIGINT);
+                submissionUpdate.setObject(7, submissionInfo.getObject("scorecard_template_id"), Types.BIGINT);
                 submissionUpdate.setLong(8, submissionInfo.getLong("project_id"));
                 submissionUpdate.setLong(9, submissionInfo.getLong("user_id"));
                 submissionUpdate.setLong(10, submissionInfo.getLong("reviewer_id"));
@@ -3934,18 +3944,18 @@ public class TCLoadTCSRedshift extends TCLoad {
                     submissionInsert.setLong(1, submissionInfo.getLong("project_id"));
                     submissionInsert.setLong(2, submissionInfo.getLong("user_id"));
                     submissionInsert.setLong(3, submissionInfo.getLong("reviewer_id"));
-                    submissionInsert.setFloat(4, submissionInfo.getObject("raw_score"));
-                    submissionInsert.setFloat(5, submissionInfo.getObject("final_score"));
-                    submissionInsert.setFloat(6, submissionInfo.getObject("num_appeals"));
+                    submissionInsert.setObject(4, submissionInfo.getObject("raw_score"), Types.DECIMAL, 2);
+                    submissionInsert.setObject(5, submissionInfo.getObject("final_score"), Types.DECIMAL, 2);
+                    submissionInsert.setObject(6, submissionInfo.getObject("num_appeals"), Types.INTEGER);
                     if (submissionInfo.getInt("non_null_successful_appeals") == 0) {
                         submissionInsert.setNull(7, Types.DECIMAL);
                     } else {
-                        submissionInsert.setInt(7, submissionInfo.getObject("num_successful_appeals"));
+                        submissionInsert.setObject(7, submissionInfo.getObject("num_successful_appeals"));
                     }
 
                     submissionInsert.setInt(8, reviewRespId);
-                    submissionInsert.setLong(9, submissionInfo.getObject("scorecard_id"));
-                    submissionInsert.setLong(10, submissionInfo.getObject("scorecard_template_id"));
+                    submissionInsert.setObject(9, submissionInfo.getObject("scorecard_id"), Types.BIGINT);
+                    submissionInsert.setObject(10, submissionInfo.getObject("scorecard_template_id"), Types.BIGINT);
 
                     //log.debug("before submission insert");
                     submissionInsert.executeUpdate();
@@ -4083,10 +4093,10 @@ public class TCLoadTCSRedshift extends TCLoad {
                 screeningUpdate.clearParameters();
 
 
-                screeningUpdate.setObject(1, screenings.getObject("reviewer_id"));
-                screeningUpdate.setObject(2, screenings.getObject("final_score"));
-                screeningUpdate.setObject(3, screenings.getObject("scorecard_id"));
-                screeningUpdate.setObject(4, screenings.getObject("scorecard_template_id"));
+                screeningUpdate.setObject(1, screenings.getObject("reviewer_id"), Types.INTEGER);
+                screeningUpdate.setObject(2, screenings.getObject("final_score"), Types.DECIMAL);
+                screeningUpdate.setObject(3, screenings.getObject("scorecard_id"), Types.INTEGER);
+                screeningUpdate.setObject(4, screenings.getObject("scorecard_template_id"), Types.INTEGER);
                 screeningUpdate.setLong(5, project_id);
                 screeningUpdate.setLong(6, screenings.getLong("user_id"));
 
@@ -4098,10 +4108,10 @@ public class TCLoadTCSRedshift extends TCLoad {
 
                     screeningInsert.setLong(1, project_id);
                     screeningInsert.setLong(2, screenings.getLong("user_id"));
-                    screeningInsert.setObject(3, screenings.getObject("reviewer_id"));
-                    screeningInsert.setObject(4, screenings.getObject("final_score"));
-                    screeningInsert.setObject(5, screenings.getObject("scorecard_id"));
-                    screeningInsert.setObject(6, screenings.getObject("scorecard_template_id"));
+                    screeningInsert.setObject(3, screenings.getObject("reviewer_id"), Types.INTEGER);
+                    screeningInsert.setObject(4, screenings.getObject("final_score"), Types.DECIMAL);
+                    screeningInsert.setObject(5, screenings.getObject("scorecard_id"), Types.INTEGER);
+                    screeningInsert.setObject(6, screenings.getObject("scorecard_template_id"), Types.INTEGER);
 
                     screeningInsert.executeUpdate();
                 }
@@ -4209,7 +4219,7 @@ public class TCLoadTCSRedshift extends TCLoad {
         ResultSet rs = null;
 
         try {
-            long start = System.currentTimeMillis();:
+            long start = System.currentTimeMillis();
             final String SELECT = "select c.contest_id, c.contest_name, " +
                     "c.start_date as contest_start_timestamp, " +
                     "c.end_date as contest_end_timestamp, " +
@@ -5588,9 +5598,9 @@ public class TCLoadTCSRedshift extends TCLoad {
                     String answer = rs.getString("answer");
                     int evaluationId = getEvaluationId(rs.getInt("scorecard_question_type_id"), answer);
 
-                    update.setObject(1, rs.getObject("user_id"));
-                    update.setObject(2, rs.getObject("reviewer_id"));
-                    update.setObject(3, rs.getObject("project_id"));
+                    update.setObject(1, rs.getObject("user_id"), Types.INTEGER);
+                    update.setObject(2, rs.getObject("reviewer_id"), Types.INTEGER);
+                    update.setObject(3, rs.getObject("project_id"), Types.INTEGER);
                     if (evaluationId != 0) {
                         update.setInt(4, evaluationId);
                     } else {
@@ -5604,9 +5614,9 @@ public class TCLoadTCSRedshift extends TCLoad {
                     if (retVal == 0) {
                         insert.clearParameters();
 
-                        insert.setObject(1, rs.getObject("user_id"));
-                        insert.setObject(2, rs.getObject("reviewer_id"));
-                        insert.setObject(3, rs.getObject("project_id"));
+                        insert.setObject(1, rs.getObject("user_id"), Types.INTEGER);
+                        insert.setObject(2, rs.getObject("reviewer_id"), Types.INTEGER);
+                        insert.setObject(3, rs.getObject("project_id"), Types.INTEGER);
                         if (evaluationId != 0) {
                             insert.setInt(4, evaluationId);
                         } else {
@@ -5746,9 +5756,9 @@ public class TCLoadTCSRedshift extends TCLoad {
                         log.debug("the answer for testcase is: " + answer);
                     }
                 }
-                update.setObject(1, rs.getObject("user_id"));
-                update.setObject(2, rs.getObject("reviewer_id"));
-                update.setObject(3, rs.getObject("project_id"));
+                update.setObject(1, rs.getObject("user_id"), Types.INTEGER);
+                update.setObject(2, rs.getObject("reviewer_id"), Types.INTEGER);
+                update.setObject(3, rs.getObject("project_id"), Types.INTEGER);
                 update.setObject(4, numTests);
                 update.setObject(5, numPassed);
                 update.setLong(6, rs.getLong("scorecard_question_id"));
@@ -5759,9 +5769,9 @@ public class TCLoadTCSRedshift extends TCLoad {
                 if (retVal == 0) {
                     insert.clearParameters();
 
-                    insert.setObject(1, rs.getObject("user_id"));
-                    insert.setObject(2, rs.getObject("reviewer_id"));
-                    insert.setObject(3, rs.getObject("project_id"));
+                    insert.setObject(1, rs.getObject("user_id"), Types.INTEGER);
+                    insert.setObject(2, rs.getObject("reviewer_id"), Types.INTEGER);
+                    insert.setObject(3, rs.getObject("project_id"), Types.INTEGER);
                     insert.setObject(4, numTests);
                     insert.setObject(5, numTests);
                     insert.setLong(6, rs.getLong("scorecard_question_id"));
@@ -5919,11 +5929,11 @@ public class TCLoadTCSRedshift extends TCLoad {
 
                     insert.clearParameters();
 
-                    insert.setObject(1, rs.getObject("user_id"));
-                    insert.setObject(2, rs.getObject("reviewer_id"));
-                    insert.setObject(3, rs.getObject("project_id"));
+                    insert.setObject(1, rs.getObject("user_id"), Types.INTEGER);
+                    insert.setObject(2, rs.getObject("reviewer_id"), Types.INTEGER);
+                    insert.setObject(3, rs.getObject("project_id"), Types.INTEGER);
                     insert.setObject(4, rs.getObject("response_text"));
-                    insert.setObject(5, rs.getObject("response_type_id"));
+                    insert.setObject(5, rs.getObject("response_type_id"), Types.INTEGER);
                     insert.setObject(6, rs.getObject("response_type_desc"));
                     insert.setInt(7, sort);
                     insert.setLong(8, rs.getLong("scorecard_question_id"));
@@ -6061,9 +6071,9 @@ public class TCLoadTCSRedshift extends TCLoad {
                 update.clearParameters();
                 update.setLong(1, rs.getLong("scorecard_question_id"));
                 update.setLong(2, rs.getLong("scorecard_id"));
-                update.setObject(3, rs.getObject("user_id"));
-                update.setObject(4, rs.getObject("reviewer_id"));
-                update.setObject(5, rs.getObject("project_id"));
+                update.setObject(3, rs.getObject("user_id"), Types.INTEGER);
+                update.setObject(4, rs.getObject("reviewer_id"), Types.INTEGER);
+                update.setObject(5, rs.getObject("project_id"), Types.INTEGER);
 
                 String answer = rs.getString("raw_evaluation_id");
                 int evaluationId = getEvaluationId(rs.getInt("scorecard_question_type_id"), answer);
@@ -6082,14 +6092,16 @@ public class TCLoadTCSRedshift extends TCLoad {
                 }
                 String appealText = rs.getString("appeal_text");
                 if (appealText == null) {
-                    update.setNull(8, Types.BLOB);
+                    //update.setNull(8, Types.BLOB);
+                    update.setString(8, "");
                 } else {
                     update.setBytes(8, DBMS.serializeTextString(appealText));
                 }
 
                 String appeal_response = rs.getString("appeal_response");
                 if (appeal_response == null) {
-                    update.setNull(9, Types.BLOB);
+                    //update.setNull(9, Types.BLOB);
+                    update.setString(9, "");  //Redshift jdbc driver can't handle null BLOB
                 } else {
                     update.setBytes(9, DBMS.serializeTextString(appeal_response));
                 }
@@ -6113,9 +6125,9 @@ public class TCLoadTCSRedshift extends TCLoad {
 
                     insert.setLong(1, rs.getLong("scorecard_question_id"));
                     insert.setLong(2, rs.getLong("scorecard_id"));
-                    insert.setObject(3, rs.getObject("user_id"));
-                    insert.setObject(4, rs.getObject("reviewer_id"));
-                    insert.setObject(5, rs.getObject("project_id"));
+                    insert.setObject(3, rs.getObject("user_id"), Types.INTEGER);
+                    insert.setObject(4, rs.getObject("reviewer_id"), Types.INTEGER);
+                    insert.setObject(5, rs.getObject("project_id"), Types.INTEGER);
                     if (evaluationId != 0) {
                         insert.setInt(6, evaluationId);
                     } else {
@@ -6128,13 +6140,15 @@ public class TCLoadTCSRedshift extends TCLoad {
                     }
 
                     if (appealText == null) {
-                        insert.setNull(8, Types.BLOB);
+                        //insert.setNull(8, Types.BLOB);
+                        insert.setString(8, "");
                     } else {
                         insert.setBytes(8, DBMS.serializeTextString(appealText));
                     }
 
                     if (appeal_response == null) {
-                        insert.setNull(9, Types.BLOB);
+                        //insert.setNull(9, Types.BLOB);
+                        insert.setString(9, "");
                     } else {
                         insert.setBytes(9, DBMS.serializeTextString(appeal_response));
                     }
@@ -6287,9 +6301,9 @@ public class TCLoadTCSRedshift extends TCLoad {
 
                 update.setLong(1, rs.getLong("scorecard_question_id"));
                 update.setLong(2, rs.getLong("scorecard_id"));
-                update.setObject(3, rs.getObject("user_id"));
-                update.setObject(4, rs.getObject("reviewer_id"));
-                update.setObject(5, rs.getObject("project_id"));
+                update.setObject(3, rs.getObject("user_id"), Types.INTEGER);
+                update.setObject(4, rs.getObject("reviewer_id"), Types.INTEGER);
+                update.setObject(5, rs.getObject("project_id"), Types.INTEGER);
 
                 String answer = rs.getString("raw_answer");
                 String[] tests = answer == null ? new String[0] : answer.split("/");
@@ -6336,9 +6350,9 @@ public class TCLoadTCSRedshift extends TCLoad {
 
                     insert.setLong(1, rs.getLong("scorecard_question_id"));
                     insert.setLong(2, rs.getLong("scorecard_id"));
-                    insert.setObject(3, rs.getObject("user_id"));
-                    insert.setObject(4, rs.getObject("reviewer_id"));
-                    insert.setObject(5, rs.getObject("project_id"));
+                    insert.setObject(3, rs.getObject("user_id"), Types.INTEGER);
+                    insert.setObject(4, rs.getObject("reviewer_id"), Types.INTEGER);
+                    insert.setObject(5, rs.getObject("project_id"), Types.INTEGER);
                     insert.setObject(6, rawNumPassed);
                     insert.setObject(7, rawNumTests);
                     insert.setObject(8, finalNumPassed);
