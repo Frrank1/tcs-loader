@@ -276,7 +276,7 @@ public class TCLoadTCSRedshift extends TCLoad {
 
             doLoadParticipationStats();
 
-            doClearCache(); // Cache must be set up & running (see resources/cache.properties)
+//            doClearCache(); // Cache must be set up & running (see resources/cache.properties)
 
             setLastUpdateTime();
 
@@ -3917,7 +3917,7 @@ public class TCLoadTCSRedshift extends TCLoad {
 
                 int reviewRespId = submissionInfo.getInt("review_resp_id");
 
-                log.info( "Project_id = " + projectId + "raw_score= " + submissionInfo.getObject("raw_score") + " Object Type=" + submissionInfo.getObject("raw_score").getClass());
+                log.info( "Project_id = " + projectId + "raw_score= " + submissionInfo.getObject("raw_score"));
 
                 submissionUpdate.setObject(1, submissionInfo.getObject("raw_score"), Types.DECIMAL, 2);
                 submissionUpdate.setObject(2, submissionInfo.getObject("final_score"), Types.DECIMAL, 2);
