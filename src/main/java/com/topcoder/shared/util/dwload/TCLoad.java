@@ -14,12 +14,7 @@ package com.topcoder.shared.util.dwload;
 import com.topcoder.shared.util.DBMS;
 import com.topcoder.shared.util.logging.Logger;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Hashtable;
@@ -82,7 +77,14 @@ public abstract class TCLoad {
      * Round types
      */
     protected static final int ROUND_TYPE_MARATHON_TOURNAMENT = 19;
-    
+
+    /**
+     * Timestamps
+     */
+    protected java.sql.Timestamp fStartTime = null;
+    protected java.sql.Timestamp fLastLogTime = null;
+
+
     // PUBLIC METHODS
 
     /**
@@ -592,6 +594,22 @@ public abstract class TCLoad {
     }
 
 
+    // GETTERS, SETTERS
 
+    public Timestamp getfStartTime() {
+        return fStartTime;
+    }
+
+    public void setfStartTime(Timestamp fStartTime) {
+        this.fStartTime = fStartTime;
+    }
+
+    public Timestamp getfLastLogTime() {
+        return fLastLogTime;
+    }
+
+    public void setfLastLogTime(Timestamp fLastLogTime) {
+        this.fLastLogTime = fLastLogTime;
+    }
 
 }
