@@ -187,9 +187,9 @@ public class TCLoadTCSRedshift extends TCLoad {
             fStartTime = new java.sql.Timestamp(System.currentTimeMillis());
             getLastUpdateTime();
 
-loadCoder();
 
-/*
+            loadCoder();
+
             doLoadEvent();
 
             doLoadUserEvent();
@@ -280,7 +280,7 @@ loadCoder();
             doLoadParticipationStats();
 
 //            doClearCache(); // Cache must be set up & running (see resources/cache.properties)
-*/
+
             setLastUpdateTime();
 
             log.info("[TCS -> REDSHIFT LOAD] SUCCESS: TCS to Redshift load ran successfully.");
