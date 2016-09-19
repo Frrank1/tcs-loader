@@ -140,9 +140,9 @@ public class TCLoadTestcaseAppeal extends TCLoadTCSRedshift {
 
                 update.setLong(1, rs.getLong("scorecard_question_id"));
                 update.setLong(2, rs.getLong("scorecard_id"));
-                update.setObject(3, rs.getObject("user_id"), Types.BIGINT);
-                update.setObject(4, rs.getObject("reviewer_id"), Types.BIGINT);
-                update.setObject(5, rs.getObject("project_id"), Types.BIGINT);
+                update.setObject(3, rs.getObject("user_id"), Types.INTEGER);
+                update.setObject(4, rs.getObject("reviewer_id"), Types.INTEGER);
+                update.setObject(5, rs.getObject("project_id"), Types.INTEGER);
 
                 String answer = rs.getString("raw_answer");
                 String[] tests = answer == null ? new String[0] : answer.split("/");
@@ -153,8 +153,8 @@ public class TCLoadTestcaseAppeal extends TCLoadTCSRedshift {
                     rawNumTests = tests[1];
                 }
 
-                update.setObject(6, rawNumPassed, Types.INTEGER);
-                update.setObject(7, rawNumTests, Types.INTEGER);
+                update.setObject(6, rawNumPassed);
+                update.setObject(7, rawNumTests);
 
                 answer = rs.getString("answer");
                 tests = answer == null ? new String[0] : answer.split("/");
@@ -165,10 +165,10 @@ public class TCLoadTestcaseAppeal extends TCLoadTCSRedshift {
                     finalNumTests = tests[1];
                 }
 
-                update.setObject(8, finalNumPassed, Types.INTEGER);
-                update.setObject(9, finalNumTests, Types.INTEGER);
-                update.setObject(10, rs.getObject("appeal_text"), Types.VARCHAR);
-                update.setObject(11, rs.getObject("appeal_response"), Types.VARCHAR);
+                update.setObject(8, finalNumPassed);
+                update.setObject(9, finalNumTests);
+                update.setObject(10, rs.getObject("appeal_text"));
+                update.setObject(11, rs.getObject("appeal_response"));
                 String successfulInd = rs.getString("successful_ind");
                 if (successfulInd == null) {
                     update.setNull(12, Types.INTEGER);
@@ -189,15 +189,15 @@ public class TCLoadTestcaseAppeal extends TCLoadTCSRedshift {
 
                     insert.setLong(1, rs.getLong("scorecard_question_id"));
                     insert.setLong(2, rs.getLong("scorecard_id"));
-                    insert.setObject(3, rs.getObject("user_id"), Types.BIGINT);
-                    insert.setObject(4, rs.getObject("reviewer_id"), Types.BIGINT);
-                    insert.setObject(5, rs.getObject("project_id"), Types.BIGINT);
-                    insert.setObject(6, rawNumPassed, Types.INTEGER);
-                    insert.setObject(7, rawNumTests, Types.INTEGER);
-                    insert.setObject(8, finalNumPassed, Types.INTEGER);
-                    insert.setObject(9, finalNumTests, Types.INTEGER);
-                    insert.setObject(10, rs.getObject("appeal_text"), Types.VARCHAR);
-                    insert.setObject(11, rs.getObject("appeal_response"), Types.VARCHAR);
+                    insert.setObject(3, rs.getObject("user_id"), Types.INTEGER);
+                    insert.setObject(4, rs.getObject("reviewer_id"), Types.INTEGER);
+                    insert.setObject(5, rs.getObject("project_id"), Types.INTEGER);
+                    insert.setObject(6, rawNumPassed);
+                    insert.setObject(7, rawNumTests);
+                    insert.setObject(8, finalNumPassed);
+                    insert.setObject(9, finalNumTests);
+                    insert.setObject(10, rs.getObject("appeal_text"));
+                    insert.setObject(11, rs.getObject("appeal_response"));
                     insert.setLong(12, rs.getLong("appeal_id"));
                     if (successfulInd == null) {
                         insert.setNull(13, Types.INTEGER);

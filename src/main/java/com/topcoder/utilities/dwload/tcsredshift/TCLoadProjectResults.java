@@ -278,7 +278,8 @@ public class TCLoadProjectResults extends TCLoadTCSRedshift {
                         " group by pr2.user_id ";
 
         try {
-            Map<Integer, ContestResultCalculator> stageCalculators = getStageCalculators();
+            // EXCLUDE DR
+            //Map<Integer, ContestResultCalculator> stageCalculators = getStageCalculators();
 
             Map<Long, Integer> dRProjects = getDRProjects();
 
@@ -332,7 +333,8 @@ public class TCLoadProjectResults extends TCLoadTCSRedshift {
                     if (projectsFound) {
                         log.info("Loading next " + numProjectsFound + " projects...");
 
-                        List<Track> activeTracks = getActiveTracks();
+                        // EXCLUDE DR
+                        // List<Track> activeTracks = getActiveTracks();
 
                         resultSelect = prepareStatement(buf.toString(), SOURCE_DB);
 
@@ -395,6 +397,7 @@ public class TCLoadProjectResults extends TCLoadTCSRedshift {
 
                             boolean hasDR = false;
 
+                            /*
                             if (stage != null &&
                                     (projectResults.getInt("project_stat_id") == 7 ||  // COMPLETED
                                             projectResults.getInt("project_stat_id") == 8 ||  // WINNER UNRESPONSIVE
@@ -485,17 +488,17 @@ public class TCLoadProjectResults extends TCLoadTCSRedshift {
                                         }
                                     }
                                 }
-                            }
+                            }*/
                             resultInsert.clearParameters();
 
                             resultInsert.setLong(1, project_id);
                             resultInsert.setLong(2, projectResults.getLong("user_id"));
-                            resultInsert.setObject(3, projectResults.getObject("submit_ind"), Types.TINYINT);
-                            resultInsert.setObject(4, projectResults.getObject("valid_submission_ind"), Types.TINYINT);
-                            resultInsert.setObject(5, projectResults.getObject("raw_score"), Types.DOUBLE);
-                            resultInsert.setObject(6, projectResults.getObject("final_score"), Types.DOUBLE);
+                            resultInsert.setObject(3, projectResults.getObject("submit_ind"), Types.INTEGER);
+                            resultInsert.setObject(4, projectResults.getObject("valid_submission_ind"), Types.INTEGER);
+                            resultInsert.setObject(5, projectResults.getObject("raw_score"), Types.DECIMAL, 2);
+                            resultInsert.setObject(6, projectResults.getObject("final_score"), Types.DECIMAL, 2);
                             if (projectResults.getObject("inquire_timestamp") != null) {
-                                resultInsert.setObject(7, projectResults.getObject("inquire_timestamp"));
+                                resultInsert.setObject(7, projectResults.getObject("inquire_timestamp"), Types.TIMESTAMP);
                             } else {
                                 Timestamp regDate = convertToDate(projectResults.getString("registrationd_date"));
                                 if (regDate != null) {
@@ -506,11 +509,11 @@ public class TCLoadProjectResults extends TCLoadTCSRedshift {
                             }
                             resultInsert.setObject(8, projectResults.getObject("submit_timestamp"), Types.TIMESTAMP);
                             resultInsert.setObject(9, projectResults.getObject("review_completed_timestamp"), Types.TIMESTAMP);
-                            resultInsert.setObject(10, projectResults.getObject("payment"), Types.DOUBLE);
+                            resultInsert.setObject(10, projectResults.getObject("payment"), Types.DECIMAL, 2);
                             resultInsert.setObject(11, projectResults.getObject("old_rating"), Types.INTEGER);
                             resultInsert.setObject(12, projectResults.getObject("new_rating"), Types.INTEGER);
-                            resultInsert.setObject(13, projectResults.getObject("reliability_before_resolution"), Types.DOUBLE);
-                            resultInsert.setObject(14, projectResults.getObject("reliability_after_resolution"), Types.DOUBLE);
+                            resultInsert.setObject(13, projectResults.getObject("reliability_before_resolution"), Types.DECIMAL, 2);
+                            resultInsert.setObject(14, projectResults.getObject("reliability_after_resolution"), Types.DECIMAL, 2);
 
                             Object placement = projectResults.getObject("placed");
                             Object passedReviewInd = projectResults.getObject("passed_review_ind");
@@ -521,8 +524,8 @@ public class TCLoadProjectResults extends TCLoadTCSRedshift {
                             }
 
                             resultInsert.setObject(15, placement, Types.INTEGER);
-                            resultInsert.setObject(16, projectResults.getObject("rating_ind"), Types.TINYINT);
-                            resultInsert.setObject(17, passedReviewInd, Types.TINYINT);
+                            resultInsert.setObject(16, projectResults.getObject("rating_ind"), Types.INTEGER);
+                            resultInsert.setObject(17, passedReviewInd, Types.INTEGER);
 
                             if (hasDR) {
                                 resultInsert.setDouble(18, pointsAwarded);
@@ -554,7 +557,8 @@ public class TCLoadProjectResults extends TCLoadTCSRedshift {
                                 resultInsert.executeUpdate();
                             } catch(Exception e) {
                                 // Notes: it seems same user will appear in resource table twice
-                                log.debug("project_id: " + project_id + " user_id: " + projectResults.getLong("user_id"));
+                                log.info("project_id: " + project_id + " user_id: " + projectResults.getLong("user_id"));
+                                log.info(e);
                                 throw(e);
                             }
                             //log.debug("after result insert");

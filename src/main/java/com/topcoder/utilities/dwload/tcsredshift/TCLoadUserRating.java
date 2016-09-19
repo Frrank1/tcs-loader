@@ -81,16 +81,16 @@ public class TCLoadUserRating extends TCLoadTCSRedshift {
 
                 //update record, if 0 rows affected, insert record
                 update.clearParameters();
-                update.setLong(1, rs.getLong("rating"));
-                update.setLong(2, rs.getLong("vol"));
-                update.setLong(3, rs.getLong("rating_no_vol"));
-                update.setInt(4, rs.getInt("num_ratings"));
+                update.setObject(1, rs.getObject("rating"));
+                update.setObject(2, rs.getObject("vol"));
+                update.setObject(3, rs.getObject("rating_no_vol"));
+                update.setObject(4, rs.getObject("num_ratings"));
                 //ps2.setObject(6, rs.getObject("last_component_rated"));
-                update.setObject(5, rs.getObject("last_rated_project_id"), Types.BIGINT);
+                update.setObject(5, rs.getObject("last_rated_project_id"));
                 update.setInt(6, rs.getInt("highest_rating"));
                 update.setInt(7, rs.getInt("lowest_rating"));
                 update.setLong(8, userId);
-                update.setInt(9, rs.getInt("phase_id"));
+                update.setObject(9, rs.getObject("phase_id"));
 
 
                 int retVal = update.executeUpdate();
@@ -99,12 +99,12 @@ public class TCLoadUserRating extends TCLoadTCSRedshift {
                     //need to insert
                     insert.clearParameters();
                     insert.setLong(1, userId);
-                    insert.setLong(2, rs.getLong("rating"));
-                    insert.setInt(3, rs.getInt("phase_id"));
-                    insert.setLong(4, rs.getLong("vol"));
-                    insert.setLong(5, rs.getLong("rating_no_vol"));
-                    insert.setInt(6, rs.getInt("num_ratings"));
-                    insert.setObject(7, rs.getObject("last_rated_project_id"), Types.BIGINT);
+                    insert.setObject(2, rs.getObject("rating"));
+                    insert.setObject(3, rs.getObject("phase_id"));
+                    insert.setObject(4, rs.getObject("vol"));
+                    insert.setObject(5, rs.getObject("rating_no_vol"));
+                    insert.setObject(6, rs.getObject("num_ratings"));
+                    insert.setObject(7, rs.getObject("last_rated_project_id"));
                     insert.setInt(8, rs.getInt("highest_rating"));
                     insert.setInt(9, rs.getInt("lowest_rating"));
 

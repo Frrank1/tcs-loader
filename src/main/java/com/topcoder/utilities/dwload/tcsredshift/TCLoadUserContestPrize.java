@@ -65,11 +65,11 @@ public class TCLoadUserContestPrize extends TCLoadTCSRedshift {
                 count++;
                 //update record, if 0 rows affected, insert record
                 update.clearParameters();
-                update.setObject(1, rs.getObject("prize_type_id"), Types.INTEGER);
-                update.setObject(2, rs.getObject("prize_description"), Types.VARCHAR);
-                update.setObject(3, rs.getObject("place"), Types.INTEGER);
-                update.setObject(4, rs.getObject("prize_amount"), Types.DOUBLE);
-                update.setObject(5, rs.getObject("prize_payment"), Types.DOUBLE);
+                update.setObject(1, rs.getObject("prize_type_id"));
+                update.setObject(2, rs.getObject("prize_description"));
+                update.setObject(3, rs.getObject("place"));
+                update.setObject(4, rs.getObject("prize_amount"));
+                update.setObject(5, rs.getObject("prize_payment"));
                 update.setLong(6, rs.getLong("contest_id"));
                 update.setLong(7, rs.getLong("user_id"));
 
@@ -79,11 +79,11 @@ public class TCLoadUserContestPrize extends TCLoadTCSRedshift {
                     insert.clearParameters();
                     insert.setLong(1, rs.getLong("contest_id"));
                     insert.setLong(2, rs.getLong("user_id"));
-                    insert.setObject(3, rs.getObject("prize_type_id"), Types.INTEGER);
-                    insert.setObject(4, rs.getObject("prize_description"), Types.VARCHAR);
-                    insert.setObject(5, rs.getObject("place"), Types.INTEGER);
-                    insert.setObject(6, rs.getObject("prize_amount"), Types.DOUBLE);
-                    insert.setObject(7, rs.getObject("prize_payment"), Types.DOUBLE);
+                    insert.setObject(3, rs.getObject("prize_type_id"));
+                    insert.setObject(4, rs.getObject("prize_description"));
+                    insert.setObject(5, rs.getObject("place"));
+                    insert.setObject(6, rs.getObject("prize_amount"));
+                    insert.setObject(7, rs.getObject("prize_payment"));
 
                     insert.executeUpdate();
                 }

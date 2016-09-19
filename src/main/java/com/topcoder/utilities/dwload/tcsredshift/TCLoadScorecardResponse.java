@@ -129,9 +129,9 @@ public class TCLoadScorecardResponse extends TCLoadTCSRedshift {
                     String answer = rs.getString("answer");
                     int evaluationId = getEvaluationId(rs.getInt("scorecard_question_type_id"), answer);
 
-                    update.setObject(1, rs.getObject("user_id"), Types.BIGINT);
-                    update.setObject(2, rs.getObject("reviewer_id"), Types.BIGINT);
-                    update.setObject(3, rs.getObject("project_id"), Types.BIGINT);
+                    update.setObject(1, rs.getObject("user_id"));
+                    update.setObject(2, rs.getObject("reviewer_id"));
+                    update.setObject(3, rs.getObject("project_id"));
                     if (evaluationId != 0) {
                         update.setInt(4, evaluationId);
                     } else {
@@ -145,9 +145,9 @@ public class TCLoadScorecardResponse extends TCLoadTCSRedshift {
                     if (retVal == 0) {
                         insert.clearParameters();
 
-                        insert.setObject(1, rs.getObject("user_id"), Types.BIGINT);
-                        insert.setObject(2, rs.getObject("reviewer_id"), Types.BIGINT);
-                        insert.setObject(3, rs.getObject("project_id"), Types.BIGINT);
+                        insert.setObject(1, rs.getObject("user_id"));
+                        insert.setObject(2, rs.getObject("reviewer_id"));
+                        insert.setObject(3, rs.getObject("project_id"));
                         if (evaluationId != 0) {
                             insert.setInt(4, evaluationId);
                         } else {

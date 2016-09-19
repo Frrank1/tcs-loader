@@ -129,11 +129,11 @@ public class TCLoadTestcaseResponse extends TCLoadTCSRedshift {
                         log.debug("the answer for testcase is: " + answer);
                     }
                 }
-                update.setObject(1, rs.getObject("user_id"), Types.BIGINT);
-                update.setObject(2, rs.getObject("reviewer_id"), Types.BIGINT);
-                update.setObject(3, rs.getObject("project_id"), Types.BIGINT);
-                update.setObject(4, numTests, Types.INTEGER);
-                update.setObject(5, numPassed, Types.INTEGER);
+                update.setObject(1, rs.getObject("user_id"));
+                update.setObject(2, rs.getObject("reviewer_id"));
+                update.setObject(3, rs.getObject("project_id"));
+                update.setObject(4, numTests);
+                update.setObject(5, numPassed);
                 update.setLong(6, rs.getLong("scorecard_question_id"));
                 update.setLong(7, rs.getLong("scorecard_id"));
 
@@ -142,11 +142,11 @@ public class TCLoadTestcaseResponse extends TCLoadTCSRedshift {
                 if (retVal == 0) {
                     insert.clearParameters();
 
-                    insert.setObject(1, rs.getObject("user_id"), Types.BIGINT);
-                    insert.setObject(2, rs.getObject("reviewer_id"), Types.BIGINT);
-                    insert.setObject(3, rs.getObject("project_id"), Types.BIGINT);
-                    insert.setObject(4, numTests, Types.INTEGER);
-                    insert.setObject(5, numTests, Types.INTEGER);
+                    insert.setObject(1, rs.getObject("user_id"));
+                    insert.setObject(2, rs.getObject("reviewer_id"));
+                    insert.setObject(3, rs.getObject("project_id"));
+                    insert.setObject(4, numTests);
+                    insert.setObject(5, numTests);
                     insert.setLong(6, rs.getLong("scorecard_question_id"));
                     insert.setLong(7, rs.getLong("scorecard_id"));
 

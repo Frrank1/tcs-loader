@@ -52,7 +52,7 @@ public class TCLoadUserEvent extends TCLoadTCSRedshift {
                 //log.debug("PROCESSING EVENT " + rs.getInt("event_id"));
 
                 update.clearParameters();
-                update.setObject(1, rs.getObject("create_date"), Types.TIMESTAMP);
+                update.setObject(1, rs.getObject("create_date"));
                 update.setLong(2, rs.getLong("event_id"));
                 update.setLong(3, rs.getLong("user_id"));
 
@@ -63,7 +63,7 @@ public class TCLoadUserEvent extends TCLoadTCSRedshift {
                     insert.clearParameters();
                     insert.setLong(1, rs.getLong("event_id"));
                     insert.setLong(2, rs.getLong("user_id"));
-                    insert.setObject(3, rs.getObject("create_date"), Types.TIMESTAMP);
+                    insert.setObject(3, rs.getObject("create_date"));
 
                     insert.executeUpdate();
                 }
