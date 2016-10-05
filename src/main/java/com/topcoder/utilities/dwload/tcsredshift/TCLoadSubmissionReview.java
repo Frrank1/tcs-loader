@@ -189,7 +189,7 @@ public class TCLoadSubmissionReview extends TCLoadTCSRedshift {
                 }
 
                 long reviewerId = submissionInfo.getLong("reviewer_id");
-                if (!reviewerResps.containsKey(reviewerId)) {
+                if (reviewerResps.containsKey(reviewerId)) {
                     if (reviewRespId == 4) {
                         reviewRespId = nextFreeReviewRespId;
                         nextFreeReviewRespId++;
