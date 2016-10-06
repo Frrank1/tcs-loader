@@ -262,7 +262,7 @@ public class TCLoadMarathonMatches extends TCLoadTCSRedshift {
                     Timestamp postingDate = rs.getTimestamp("posting_date");
                     //update record, if 0 rows affected, insert record
                     update.setString(1, rs.getString("component_name"));
-                    update.setObject(2, rs.getObject("num_registrations"), Types.INTEGER);
+                    update.setObject(2, rs.getObject("num_registrations"));
                     update.setInt(3, rs.getInt("num_submissions"));
                     update.setInt(4, rs.getInt("phase_id"));
                     update.setString(5, rs.getString("phase_desc"));
@@ -337,7 +337,7 @@ public class TCLoadMarathonMatches extends TCLoadTCSRedshift {
                         //need to insert
                         insert.setLong(1, rs.getLong("project_id"));
                         insert.setString(2, rs.getString("component_name"));
-                        insert.setObject(3, rs.getObject("num_registrations"), Types.INTEGER);
+                        insert.setObject(3, rs.getObject("num_registrations"));
                         insert.setInt(4, rs.getInt("num_submissions"));
                         insert.setInt(5, rs.getInt("phase_id"));
                         insert.setString(6, rs.getString("phase_desc"));

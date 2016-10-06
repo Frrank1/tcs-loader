@@ -64,15 +64,15 @@ public class TCLoadContests extends TCLoadTCSRedshift {
 
                 //update record, if 0 rows affected, insert record
                 update.clearParameters();
-                update.setObject(1, rs.getObject("contest_name"), Types.VARCHAR);
-                update.setObject(2, rs.getObject("contest_start_timestamp"), Types.TIMESTAMP);
-                update.setObject(3, rs.getObject("contest_end_timestamp"), Types.TIMESTAMP);
-                update.setObject(4, rs.getObject("contest_type_id"), Types.INTEGER);
-                update.setObject(5, rs.getObject("contest_type_desc"), Types.VARCHAR);
-                update.setObject(6, rs.getObject("phase_id"), Types.INTEGER);
-                update.setObject(7, rs.getObject("event_id"), Types.BIGINT);
-                update.setObject(8, rs.getObject("project_category_id"), Types.INTEGER);
-                update.setObject(9, rs.getObject("name"), Types.VARCHAR);
+                update.setObject(1, rs.getObject("contest_name"));
+                update.setObject(2, rs.getObject("contest_start_timestamp"));
+                update.setObject(3, rs.getObject("contest_end_timestamp"));
+                update.setObject(4, rs.getObject("contest_type_id"));
+                update.setObject(5, rs.getObject("contest_type_desc"));
+                update.setObject(6, rs.getObject("phase_id"));
+                update.setObject(7, rs.getObject("event_id"));
+                update.setObject(8, rs.getObject("project_category_id"));
+                update.setObject(9, rs.getObject("name"));
                 update.setLong(10, rs.getLong("contest_id"));
 
                 int retVal = update.executeUpdate();
@@ -81,15 +81,15 @@ public class TCLoadContests extends TCLoadTCSRedshift {
                     //need to insert
                     insert.clearParameters();
                     insert.setLong(1, rs.getLong("contest_id"));
-                    insert.setObject(2, rs.getObject("contest_name"), Types.VARCHAR);
-                    insert.setObject(3, rs.getObject("contest_start_timestamp"), Types.TIMESTAMP);
-                    insert.setObject(4, rs.getObject("contest_end_timestamp"), Types.TIMESTAMP);
-                    insert.setObject(5, rs.getObject("contest_type_id"), Types.INTEGER);
-                    insert.setObject(6, rs.getObject("contest_type_desc"), Types.VARCHAR);
-                    insert.setObject(7, rs.getObject("phase_id"), Types.INTEGER);
-                    insert.setObject(8, rs.getObject("event_id"), Types.BIGINT);
-                    insert.setObject(9, rs.getObject("project_category_id"), Types.INTEGER);
-                    insert.setObject(10, rs.getObject("name"), Types.VARCHAR);
+                    insert.setObject(2, rs.getObject("contest_name"));
+                    insert.setObject(3, rs.getObject("contest_start_timestamp"));
+                    insert.setObject(4, rs.getObject("contest_end_timestamp"));
+                    insert.setObject(5, rs.getObject("contest_type_id"));
+                    insert.setObject(6, rs.getObject("contest_type_desc"));
+                    insert.setObject(7, rs.getObject("phase_id"));
+                    insert.setObject(8, rs.getObject("event_id"));
+                    insert.setObject(9, rs.getObject("project_category_id"));
+                    insert.setObject(10, rs.getObject("name"));
 
                     insert.executeUpdate();
                 }

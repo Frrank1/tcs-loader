@@ -109,10 +109,10 @@ public class TCLoadSubmissionScreening extends TCLoadTCSRedshift {
                 screeningUpdate.clearParameters();
 
 
-                screeningUpdate.setObject(1, screenings.getObject("reviewer_id"), Types.BIGINT);
-                screeningUpdate.setObject(2, screenings.getObject("final_score"), Types.DOUBLE);
-                screeningUpdate.setObject(3, screenings.getObject("scorecard_id"), Types.BIGINT);
-                screeningUpdate.setObject(4, screenings.getObject("scorecard_template_id"), Types.BIGINT);
+                screeningUpdate.setObject(1, screenings.getObject("reviewer_id"), Types.INTEGER);
+                screeningUpdate.setObject(2, screenings.getObject("final_score"), Types.DECIMAL);
+                screeningUpdate.setObject(3, screenings.getObject("scorecard_id"), Types.INTEGER);
+                screeningUpdate.setObject(4, screenings.getObject("scorecard_template_id"), Types.INTEGER);
                 screeningUpdate.setLong(5, project_id);
                 screeningUpdate.setLong(6, screenings.getLong("user_id"));
 
@@ -124,10 +124,10 @@ public class TCLoadSubmissionScreening extends TCLoadTCSRedshift {
 
                     screeningInsert.setLong(1, project_id);
                     screeningInsert.setLong(2, screenings.getLong("user_id"));
-                    screeningInsert.setObject(3, screenings.getObject("reviewer_id"), Types.BIGINT);
-                    screeningInsert.setObject(4, screenings.getObject("final_score"), Types.DOUBLE);
-                    screeningInsert.setObject(5, screenings.getObject("scorecard_id"), Types.BIGINT);
-                    screeningInsert.setObject(6, screenings.getObject("scorecard_template_id"), Types.BIGINT);
+                    screeningInsert.setObject(3, screenings.getObject("reviewer_id"), Types.INTEGER);
+                    screeningInsert.setObject(4, screenings.getObject("final_score"), Types.DECIMAL);
+                    screeningInsert.setObject(5, screenings.getObject("scorecard_id"), Types.INTEGER);
+                    screeningInsert.setObject(6, screenings.getObject("scorecard_template_id"), Types.INTEGER);
 
                     screeningInsert.executeUpdate();
                 }

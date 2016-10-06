@@ -117,14 +117,14 @@ public class TCLoadScorecardQuestion extends TCLoadTCSRedshift {
                 questionId = rs.getLong("scorecard_template_id");
 
                 update.setLong(1, questionId);
-                update.setObject(2, rs.getObject("question_text"), Types.LONGVARCHAR);
-                update.setObject(3, rs.getObject("question_weight"), Types.DOUBLE);
-                update.setObject(4, rs.getObject("section_id"), Types.BIGINT);
-                update.setObject(5, rs.getObject("section_desc"), Types.VARCHAR);
-                update.setObject(6, rs.getObject("section_weight"), Types.DOUBLE);
-                update.setObject(7, rs.getObject("section_group_id"), Types.BIGINT);
-                update.setObject(8, rs.getObject("section_group_desc"), Types.VARCHAR);
-                update.setObject(9, rs.getObject("question_desc"), Types.VARCHAR);
+                update.setObject(2, rs.getObject("question_text"));
+                update.setObject(3, rs.getObject("question_weight"));
+                update.setObject(4, rs.getObject("section_id"));
+                update.setObject(5, rs.getObject("section_desc"));
+                update.setObject(6, rs.getObject("section_weight"));
+                update.setObject(7, rs.getObject("section_group_id"));
+                update.setObject(8, rs.getObject("section_group_desc"));
+                update.setObject(9, rs.getObject("question_desc"));
                 update.setInt(10, sort);
                 update.setObject(11, questionHeader);
                 update.setLong(12, rs.getLong("scorecard_question_id"));
@@ -134,17 +134,17 @@ public class TCLoadScorecardQuestion extends TCLoadTCSRedshift {
                 if (retVal == 0) {
                     insert.clearParameters();
 
-                    insert.setObject(1, rs.getObject("scorecard_template_id"), Types.BIGINT);
-                    insert.setObject(2, rs.getObject("question_text"), Types.LONGVARCHAR);
-                    insert.setObject(3, rs.getObject("question_weight"), Types.DOUBLE);
-                    insert.setObject(4, rs.getObject("section_id"), Types.BIGINT);
-                    insert.setObject(5, rs.getObject("section_desc"), Types.VARCHAR);
-                    insert.setObject(6, rs.getObject("section_weight"), Types.DOUBLE);
-                    insert.setObject(7, rs.getObject("section_group_id"), Types.BIGINT);
-                    insert.setObject(8, rs.getObject("section_group_desc"), Types.VARCHAR);
-                    insert.setObject(9, rs.getObject("question_desc"), Types.CHAR);
+                    insert.setObject(1, rs.getObject("scorecard_template_id"));
+                    insert.setObject(2, rs.getObject("question_text"));
+                    insert.setObject(3, rs.getObject("question_weight"));
+                    insert.setObject(4, rs.getObject("section_id"));
+                    insert.setObject(5, rs.getObject("section_desc"));
+                    insert.setObject(6, rs.getObject("section_weight"));
+                    insert.setObject(7, rs.getObject("section_group_id"));
+                    insert.setObject(8, rs.getObject("section_group_desc"));
+                    insert.setObject(9, rs.getObject("question_desc"));
                     insert.setInt(10, sort);
-                    insert.setObject(11, questionHeader, Types.VARCHAR);
+                    insert.setObject(11, questionHeader);
                     insert.setLong(12, rs.getLong("scorecard_question_id"));
 
                     insert.executeUpdate();

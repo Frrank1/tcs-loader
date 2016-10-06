@@ -134,9 +134,9 @@ public class TCLoadAppeal extends TCLoadTCSRedshift {
                 update.clearParameters();
                 update.setLong(1, rs.getLong("scorecard_question_id"));
                 update.setLong(2, rs.getLong("scorecard_id"));
-                update.setObject(3, rs.getObject("user_id"), Types.BIGINT);
-                update.setObject(4, rs.getObject("reviewer_id"), Types.BIGINT);
-                update.setObject(5, rs.getObject("project_id"), Types.BIGINT);
+                update.setObject(3, rs.getObject("user_id"), Types.INTEGER);
+                update.setObject(4, rs.getObject("reviewer_id"), Types.INTEGER);
+                update.setObject(5, rs.getObject("project_id"), Types.INTEGER);
 
                 String answer = rs.getString("raw_evaluation_id");
                 int evaluationId = getEvaluationId(rs.getInt("scorecard_question_type_id"), answer);
@@ -155,14 +155,16 @@ public class TCLoadAppeal extends TCLoadTCSRedshift {
                 }
                 String appealText = rs.getString("appeal_text");
                 if (appealText == null) {
-                    update.setNull(8, Types.BLOB);
+                    //update.setNull(8, Types.BLOB);
+                    update.setString(8, ""); //Redshift jdbc driver can't handle null BLOB
                 } else {
                     update.setBytes(8, DBMS.serializeTextString(appealText));
                 }
 
                 String appeal_response = rs.getString("appeal_response");
                 if (appeal_response == null) {
-                    update.setNull(9, Types.BLOB);
+                    //update.setNull(9, Types.BLOB);
+                    update.setString(9, ""); //Redshift jdbc driver can't handle null BLOB
                 } else {
                     update.setBytes(9, DBMS.serializeTextString(appeal_response));
                 }
@@ -186,9 +188,9 @@ public class TCLoadAppeal extends TCLoadTCSRedshift {
 
                     insert.setLong(1, rs.getLong("scorecard_question_id"));
                     insert.setLong(2, rs.getLong("scorecard_id"));
-                    insert.setObject(3, rs.getObject("user_id"), Types.BIGINT);
-                    insert.setObject(4, rs.getObject("reviewer_id"), Types.BIGINT);
-                    insert.setObject(5, rs.getObject("project_id"), Types.BIGINT);
+                    insert.setObject(3, rs.getObject("user_id"), Types.INTEGER);
+                    insert.setObject(4, rs.getObject("reviewer_id"), Types.INTEGER);
+                    insert.setObject(5, rs.getObject("project_id"), Types.INTEGER);
                     if (evaluationId != 0) {
                         insert.setInt(6, evaluationId);
                     } else {
@@ -201,13 +203,15 @@ public class TCLoadAppeal extends TCLoadTCSRedshift {
                     }
 
                     if (appealText == null) {
-                        insert.setNull(8, Types.BLOB);
+                        //insert.setNull(8, Types.BLOB);
+                        insert.setString(8, "");
                     } else {
                         insert.setBytes(8, DBMS.serializeTextString(appealText));
                     }
 
                     if (appeal_response == null) {
-                        insert.setNull(9, Types.BLOB);
+                        //insert.setNull(9, Types.BLOB);
+                        insert.setString(9, "");
                     } else {
                         insert.setBytes(9, DBMS.serializeTextString(appeal_response));
                     }

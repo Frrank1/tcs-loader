@@ -153,12 +153,12 @@ public class TCLoadSubjectiveResponse extends TCLoadTCSRedshift {
 
                     insert.clearParameters();
 
-                    insert.setObject(1, rs.getObject("user_id"), Types.BIGINT);
-                    insert.setObject(2, rs.getObject("reviewer_id"), Types.BIGINT);
-                    insert.setObject(3, rs.getObject("project_id"), Types.BIGINT);
-                    insert.setObject(4, rs.getObject("response_text"), Types.VARCHAR);
-                    insert.setObject(5, rs.getObject("response_type_id"), Types.BIGINT);
-                    insert.setObject(6, rs.getObject("response_type_desc"), Types.VARCHAR);
+                    insert.setObject(1, rs.getObject("user_id"), Types.INTEGER);
+                    insert.setObject(2, rs.getObject("reviewer_id"), Types.INTEGER);
+                    insert.setObject(3, rs.getObject("project_id"), Types.INTEGER);
+                    insert.setObject(4, rs.getObject("response_text"));
+                    insert.setObject(5, rs.getObject("response_type_id"), Types.INTEGER);
+                    insert.setObject(6, rs.getObject("response_type_desc"));
                     insert.setInt(7, sort);
                     insert.setLong(8, rs.getLong("scorecard_question_id"));
                     insert.setLong(9, rs.getLong("scorecard_id"));

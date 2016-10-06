@@ -60,10 +60,10 @@ public class TCLoadEvaluationLU extends TCLoadTCSRedshift {
 
                 update.clearParameters();
 
-                update.setObject(1, rs.getObject("evaluation_desc"), Types.VARCHAR);
-                update.setObject(2, rs.getObject("evaluation_value"), Types.DOUBLE);
-                update.setObject(3, rs.getObject("evaluation_type_id"), Types.INTEGER);
-                update.setObject(4, rs.getObject("evaluation_type_desc"), Types.VARCHAR);
+                update.setObject(1, rs.getObject("evaluation_desc"));
+                update.setObject(2, rs.getObject("evaluation_value"));
+                update.setObject(3, rs.getObject("evaluation_type_id"));
+                update.setObject(4, rs.getObject("evaluation_type_desc"));
                 update.setLong(5, rs.getLong("evaluation_id"));
 
                 int retVal = update.executeUpdate();
@@ -71,10 +71,10 @@ public class TCLoadEvaluationLU extends TCLoadTCSRedshift {
                 if (retVal == 0) {
                     insert.clearParameters();
 
-                    insert.setObject(1, rs.getObject("evaluation_desc"), Types.VARCHAR);
-                    insert.setObject(2, rs.getObject("evaluation_value"), Types.DOUBLE);
-                    insert.setObject(3, rs.getObject("evaluation_type_id"), Types.INTEGER);
-                    insert.setObject(4, rs.getObject("evaluation_type_desc"), Types.VARCHAR);
+                    insert.setObject(1, rs.getObject("evaluation_desc"));
+                    insert.setObject(2, rs.getObject("evaluation_value"));
+                    insert.setObject(3, rs.getObject("evaluation_type_id"));
+                    insert.setObject(4, rs.getObject("evaluation_type_desc"));
                     insert.setLong(5, rs.getLong("evaluation_id"));
 
                     insert.executeUpdate();

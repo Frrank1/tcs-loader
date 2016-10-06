@@ -56,7 +56,7 @@ public class TCLoadEvent extends TCLoadTCSRedshift {
 
                 //update record, if 0 rows affected, insert record
                 update.clearParameters();
-                update.setObject(1, rs.getObject("event_name"), Types.VARCHAR);
+                update.setObject(1, rs.getObject("event_name"));
                 update.setLong(2, rs.getLong("event_id"));
 
                 int retVal = update.executeUpdate();
@@ -65,7 +65,7 @@ public class TCLoadEvent extends TCLoadTCSRedshift {
                     //need to insert
                     insert.clearParameters();
                     insert.setLong(1, rs.getLong("event_id"));
-                    insert.setObject(2, rs.getObject("event_name"), Types.VARCHAR);
+                    insert.setObject(2, rs.getObject("event_name"));
 
                     insert.executeUpdate();
                 }

@@ -68,8 +68,8 @@ public class TCLoadScorecardTemplate extends TCLoadTCSRedshift {
 
                 update.clearParameters();
 
-                update.setObject(1, rs.getObject("scorecard_type_id"), Types.INTEGER);
-                update.setObject(2, rs.getObject("scorecard_type_desc"), Types.VARCHAR);
+                update.setObject(1, rs.getObject("scorecard_type_id"));
+                update.setObject(2, rs.getObject("scorecard_type_desc"));
                 update.setLong(3, rs.getLong("scorecard_template_id"));
 
                 int retVal = update.executeUpdate();
@@ -77,8 +77,8 @@ public class TCLoadScorecardTemplate extends TCLoadTCSRedshift {
                 if (retVal == 0) {
                     insert.clearParameters();
 
-                    insert.setObject(1, rs.getObject("scorecard_type_id"), Types.INTEGER);
-                    insert.setObject(2, rs.getObject("scorecard_type_desc"), Types.VARCHAR);
+                    insert.setObject(1, rs.getObject("scorecard_type_id"));
+                    insert.setObject(2, rs.getObject("scorecard_type_desc"));
                     insert.setLong(3, rs.getLong("scorecard_template_id"));
 
                     insert.executeUpdate();

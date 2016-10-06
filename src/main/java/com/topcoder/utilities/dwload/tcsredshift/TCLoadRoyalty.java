@@ -51,9 +51,9 @@ public class TCLoadRoyalty extends TCLoadTCSRedshift {
 
                 //update record, if 0 rows affected, insert record
                 update.clearParameters();
-                update.setObject(1, rs.getObject("amount"), Types.DECIMAL);
-                update.setObject(2, rs.getObject("description"), Types.VARCHAR);
-                update.setObject(3, rs.getObject("royalty_date"), Types.DATE);
+                update.setObject(1, rs.getObject("amount"));
+                update.setObject(2, rs.getObject("description"));
+                update.setObject(3, rs.getObject("royalty_date"));
                 update.setLong(4, rs.getLong("user_id"));
 
                 int retVal = update.executeUpdate();
@@ -62,9 +62,9 @@ public class TCLoadRoyalty extends TCLoadTCSRedshift {
                     //need to insert
                     insert.clearParameters();
                     insert.setLong(1, rs.getLong("user_id"));
-                    insert.setObject(2, rs.getObject("amount"), Types.DECIMAL);
-                    insert.setObject(3, rs.getObject("description"),Types.VARCHAR);
-                    insert.setObject(4, rs.getObject("royalty_date"), Types.DATE);
+                    insert.setObject(2, rs.getObject("amount"));
+                    insert.setObject(3, rs.getObject("description"));
+                    insert.setObject(4, rs.getObject("royalty_date"));
                     insert.executeUpdate();
                 }
             }

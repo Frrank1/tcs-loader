@@ -144,8 +144,9 @@ public class TCLoadSubmissionReview extends TCLoadTCSRedshift {
 
                 int reviewRespId = submissionInfo.getInt("review_resp_id");
 
-                submissionUpdate.setObject(1, submissionInfo.getObject("raw_score"), Types.DOUBLE);
-                submissionUpdate.setObject(2, submissionInfo.getObject("final_score"), Types.DOUBLE);
+                log.info( "Project_id = " + projectId + "raw_score= " + submissionInfo.getObject("raw_score"));
+                submissionUpdate.setObject(1, submissionInfo.getObject("raw_score"), Types.DECIMAL, 2);
+                submissionUpdate.setObject(2, submissionInfo.getObject("final_score"), Types.DECIMAL, 2);
                 submissionUpdate.setObject(3, submissionInfo.getObject("num_appeals"), Types.INTEGER);
                 if (submissionInfo.getInt("non_null_successful_appeals") == 0) {
                     submissionUpdate.setNull(4, Types.DECIMAL);
@@ -169,8 +170,8 @@ public class TCLoadSubmissionReview extends TCLoadTCSRedshift {
                     submissionInsert.setLong(1, submissionInfo.getLong("project_id"));
                     submissionInsert.setLong(2, submissionInfo.getLong("user_id"));
                     submissionInsert.setLong(3, submissionInfo.getLong("reviewer_id"));
-                    submissionInsert.setObject(4, submissionInfo.getObject("raw_score"), Types.DOUBLE);
-                    submissionInsert.setObject(5, submissionInfo.getObject("final_score"), Types.DOUBLE);
+                    submissionInsert.setObject(4, submissionInfo.getObject("raw_score"), Types.DECIMAL, 2);
+                    submissionInsert.setObject(5, submissionInfo.getObject("final_score"), Types.DECIMAL, 2);
                     submissionInsert.setObject(6, submissionInfo.getObject("num_appeals"), Types.INTEGER);
                     if (submissionInfo.getInt("non_null_successful_appeals") == 0) {
                         submissionInsert.setNull(7, Types.DECIMAL);

@@ -401,20 +401,20 @@ public class TCLoadProjects extends TCLoadTCSRedshift {
                     Timestamp postingDate = rs.getTimestamp("posting_date");
                     //update record, if 0 rows affected, insert record
                     update.setString(1, rs.getString("component_name"));
-                    update.setObject(2, rs.getObject("num_registrations"), Types.INTEGER);
+                    update.setObject(2, rs.getObject("num_registrations"));
                     update.setInt(3, rs.getInt("num_submissions"));
                     update.setInt(4, rs.getInt("num_valid_submissions"));
 
                     if (rs.getObject("avg_raw_score") == null) {
                         update.setNull(5, Types.DOUBLE);
                     } else {
-                        update.setObject(5, rs.getObject("avg_raw_score"), Types.DOUBLE);
+                        update.setObject(5, rs.getObject("avg_raw_score"));
                     }
 
                     if (rs.getObject("avg_final_score") == null) {
                         update.setNull(6, Types.DOUBLE);
                     } else {
-                        update.setObject(6, rs.getObject("avg_final_score"), Types.DOUBLE);
+                        update.setObject(6, rs.getObject("avg_final_score"));
                     }
 
                     update.setInt(7, rs.getInt("phase_id"));
@@ -561,7 +561,7 @@ public class TCLoadProjects extends TCLoadTCSRedshift {
                         //need to insert
                         insert.setLong(1, rs.getLong("project_id"));
                         insert.setString(2, rs.getString("component_name"));
-                        insert.setObject(3, rs.getObject("num_registrations"), Types.INTEGER);
+                        insert.setObject(3, rs.getObject("num_registrations"));
                         insert.setInt(4, rs.getInt("num_submissions"));
                         insert.setInt(5, rs.getInt("num_valid_submissions"));
                         insert.setDouble(6, rs.getDouble("avg_raw_score"));
