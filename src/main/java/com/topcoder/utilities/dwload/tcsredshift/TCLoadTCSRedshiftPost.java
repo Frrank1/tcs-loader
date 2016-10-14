@@ -21,7 +21,7 @@ public class TCLoadTCSRedshiftPost extends TCLoadTCSRedshift {
 
     @Override
     public void performLoad() throws Exception {
-        doClearCache();     // Cache must be set up & running (see resources/cache.properties)
+//        doClearCache();     // Cache must be set up & running (see resources/cache.properties)
 
         setLastUpdateTime();
 
@@ -64,11 +64,11 @@ public class TCLoadTCSRedshiftPost extends TCLoadTCSRedshift {
             int retVal;
             query = new StringBuffer(100);
             query.append("INSERT INTO update_log ");
-            query.append("      (log_id ");        // 1
-            query.append("       ,calendar_id ");  // 2
+//            query.append("      (log_id ");        // 1
+            query.append("       (calendar_id ");  // 2
             query.append("       ,log_timestamp ");   // 3
             query.append("       ,log_type_id) ");   // 4
-            query.append("VALUES (0, ?, ?, ").append(TCS_LOG_TYPE).append(")");
+            query.append("VALUES (?, ?, ").append(TCS_LOG_TYPE).append(")");
             psUpd = prepareStatement(query.toString(), TARGET_DB);
 
             int calendar_id = lookupCalendarId(fStartTime, TARGET_DB);
