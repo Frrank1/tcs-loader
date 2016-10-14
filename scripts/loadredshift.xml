@@ -7,6 +7,7 @@
     </preload>
     <load>
         <classList>
+            <classname>com.topcoder.utilities.dwload.tcsredshift.TCLoadCoders</classname>
             <classname>com.topcoder.utilities.dwload.tcsredshift.TCLoadEvent</classname>
             <classname>com.topcoder.utilities.dwload.tcsredshift.TCLoadUserEvent</classname>
             <classname>com.topcoder.utilities.dwload.tcsredshift.TCLoadContests</classname>
