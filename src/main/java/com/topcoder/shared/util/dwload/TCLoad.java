@@ -126,6 +126,10 @@ public abstract class TCLoad {
         fDatabaseURLs.add(SOURCE_DB, url);
     }
 
+    public String getSourceDBURL() {
+    	return (String)fDatabaseURLs.get(SOURCE_DB);
+    }
+
     /**
      * Call this method to build the source database connection.
      */
@@ -184,14 +188,16 @@ public abstract class TCLoad {
 //            return null;
 
         String urlstr = (String) fDatabaseURLs.get(index);
+        System.out.println(urlstr);
+        
         Connection conn = DriverManager.getConnection(urlstr);
 
-	if (urlstr.startsWith("jdbc:informix-sqli")) {
-		// Special preparation command for Informix
-		PreparedStatement ps = conn.prepareStatement("set lock mode to wait 5");
-		ps.execute();
-		ps.close();
-	}
+		if (urlstr.startsWith("jdbc:informix-sqli")) {
+			// Special preparation command for Informix
+			PreparedStatement ps = conn.prepareStatement("set lock mode to wait 5");
+			ps.execute();
+			ps.close();
+		}
 
         if(index == SOURCE_DB) {
             setSourceConnection(conn);

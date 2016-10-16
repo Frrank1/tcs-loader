@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<loadDefinition>
+    <sourcedb>REST</sourcedb>
+    <targetdb>jdbc:informix-sqli://192.168.31.132:2021/tcs_dw:INFORMIXSERVER=informixoltp_tcp;user=informix;password=1nf0rm1x</targetdb>
+    <preload>
+        <classname>com.topcoder.utilities.dwload.salesforce.TCLoadTCSPre</classname>
+    </preload>
+    <load>
+        <classList>
+            <classname>com.topcoder.utilities.dwload.salesforce.TCLoadAccount</classname>
+        </classList>
+        <parameterList>
+            <parameter name="clientId" value="3MVG9szVa2RxsqBbihwfC.58cFsY77mlkdpxYDWlp2CfH54gNE926BQUywYidLW.RrVqR6Wln9kpHZLEPVBVY" />
+            <parameter name="clientSecret" value="6841478926717548004" />
+            <parameter name="username" value="sf.tcs@yandex.com" />
+            <parameter name="password" value="123456aBC" />
+            <parameter name="grant_type" value="password" />
+            <parameter name="loginURL" value="https://login.salesforce.com/services/oauth2/token" />
+            
+            <parameter name="auth_type" value="oauth2" description="set to none if no auth is required" />
+            
+            <parameter name="report_url_account" value="/services/data/v34.0/analytics/reports/00O41000002b1nj" />
+        </parameterList>
+    </load>
+    <postload>
+        <classname>com.topcoder.utilities.dwload.salesforce.TCLoadTCSPost</classname>
+    </postload>
+</loadDefinition>

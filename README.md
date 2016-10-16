@@ -88,7 +88,14 @@ If you're using non-default settings, you can enter more options:
 The script will load the the converted tcs_dw schema for Redshift, along with
 test data and a few other tables (coder, calendar, etc.) for testing convenience.
 
-### Running TCSLoad
+### Running TCSLoad with REST API endpoint as source DB
+Edit the XML configuration file `loadsalesforce.xml` inside the scripts directory. Set sourcedb to REST to indicate 
+you want to use a REST API endpoint instead of database. 
+
+Set "auth_type" to "oauth2" if endpoint requires login, otherwise, set it to "none".
+Set "clientId", "clientSecret", "username", "password" to the value acquired from salesforce.
+Set "report_url_account" to the report url you want to fetch data.
+### Running TCSLoad with redshift as target DB
 
 First, edit the XML configuration file `loadredshift.xml` inside the scripts directory. Change
 the targetdb node to match your cluster. The format is:

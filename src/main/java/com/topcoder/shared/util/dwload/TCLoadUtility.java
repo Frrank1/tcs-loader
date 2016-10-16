@@ -311,17 +311,23 @@ public class TCLoadUtility {
     }
 
     public static void doLoad(TCLoad tcload) throws Exception {
-        try {
-            log.info("Creating source database connection...");
-            System.out.println(tcload.buildSourceDBConn());
-            log.info("Success!");
-        } catch (SQLException sqle) {
-            sErrorMsg.setLength(0);
-            sErrorMsg.append("Creation of source DB connection failed. ");
-            sErrorMsg.append("Cannot continue.\n");
-            sErrorMsg.append(sqle.getMessage());
-            throw sqle;
-        }
+    	String sourceDBURL = tcload.getSourceDBURL();
+    	
+    	if(sourceDBURL.equalsIgnoreCase("REST")){
+    		// If source is a REST API, do NOT create database connection.
+		} else {
+			try {
+				log.info("Creating source database connection...");
+	            System.out.println(tcload.buildSourceDBConn());
+				log.info("Success!");
+			} catch (SQLException sqle) {
+				sErrorMsg.setLength(0);
+				sErrorMsg.append("Creation of source DB connection failed. ");
+				sErrorMsg.append("Cannot continue.\n");
+				sErrorMsg.append(sqle.getMessage());
+				throw sqle;
+			}
+		}
 
         try {
             log.info("Creating target database connection...");
