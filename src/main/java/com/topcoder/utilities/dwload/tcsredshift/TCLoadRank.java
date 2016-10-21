@@ -382,7 +382,7 @@ public class TCLoadRank extends TCLoadTCSRedshift {
             query.append(" , c.coder_type_id");
             query.append(" , c.comp_country_code");
             query.append(" from user_rating ur");
-            query.append(" left outer join current_school as cs on ur.user_id = cs.coder_id");
+            query.append(" left outer join informixoltp:current_school as cs on ur.user_id = cs.coder_id");
             query.append(" , coder as c");
             query.append(" where ur.user_id = c.coder_id");
             query.append(" and c.status = 'A'");
