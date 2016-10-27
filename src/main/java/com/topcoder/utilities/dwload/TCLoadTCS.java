@@ -88,6 +88,10 @@ public abstract class TCLoadTCS extends TCLoad {
             submissionDir = temp;
         }
 
+        if(params.get("tcs_log_type") != null) {
+            TCS_LOG_TYPE = Integer.valueOf((String)params.get("tcs_log_type"));
+        }
+
         return true;
     }
 

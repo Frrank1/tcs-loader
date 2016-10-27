@@ -48,6 +48,7 @@
         </classList>
         <parameterList>
             <parameter name="submission_dir" value="file:/tcssubmissions/"/>
+            <parameter name="tcs_log_type" value="4"/>
         </parameterList>
     </load>
     <postload>

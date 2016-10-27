@@ -47,7 +47,7 @@ public abstract class TCLoadTCSRedshift extends TCLoad {
     protected static final int OVERALL_RATING_RANK_TYPE_ID = 1;
     protected static final int ACTIVE_RATING_RANK_TYPE_ID = 2;
 
-    protected static final int TCS_LOG_TYPE = 8;
+    protected static int TCS_LOG_TYPE = 8;
 
     protected static final String PROJECT_SELECT =
             "select distinct project_id from project_result";
@@ -93,6 +93,10 @@ public abstract class TCLoadTCSRedshift extends TCLoad {
                 temp += "/";
             }
             submissionDir = temp;
+        }
+
+        if(params.get("tcs_log_type") != null) {
+        	TCS_LOG_TYPE = Integer.valueOf((String)params.get("tcs_log_type"));
         }
 
         return true;

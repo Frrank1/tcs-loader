@@ -46,6 +46,7 @@
             <classname>com.topcoder.utilities.dwload.tcsredshift.TCLoadParticipationStats</classname>
         </classList>
         <parameterList>
+            <parameter name="tcs_log_type" value="8"/>
         </parameterList>
     </load>
     <postload>
