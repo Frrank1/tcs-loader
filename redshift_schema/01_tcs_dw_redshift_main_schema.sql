@@ -822,6 +822,40 @@ CREATE TABLE design_project_result (
     valid_submission_ind DECIMAL(1, 0)
 );
 
+CREATE TABLE tcs_dw.payment
+(
+   payment_id            integer,
+   payment_desc          varchar(100),
+   payment_type_id       numeric(3),
+   payment_type_desc     varchar(100),
+   reference_id          integer,
+   parent_payment_id     integer,
+   charity_ind           numeric(1)     DEFAULT 1 NOT NULL,
+   show_in_profile_ind   numeric(1)     DEFAULT 1 NOT NULL,
+   show_details_ind      numeric(1)     DEFAULT 1 NOT NULL,
+   payment_status_id     numeric(3),
+   payment_status_desc   varchar(200),
+   client                varchar(100),
+   modified_calendar_id  integer,
+   modified_time_id      integer,
+   installment_number    numeric(3),
+   jira_ticket_id        varchar(100),
+   created_calendar_id   integer,
+   created_time_id       integer
+);
+
+
+CREATE TABLE tcs_dw.user_payment
+(
+   payment_id        integer,
+   user_id           integer,
+   net_amount        numeric(12,2),
+   gross_amount      numeric(12,2),
+   due_calendar_id   integer,
+   paid_calendar_id  integer,
+   total_amount      numeric(12,2)
+);
+
 
 create view active_developers (user_id) as
    select x0.user_id

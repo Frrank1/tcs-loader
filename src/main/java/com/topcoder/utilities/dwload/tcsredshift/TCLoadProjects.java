@@ -67,7 +67,7 @@ public class TCLoadProjects extends TCLoadTCSRedshift {
                             "   ,pcl.name as phase_desc " +
                             "   ,cat.category_id " +
                             "   ,cat.category_name as category_desc " +
-                            "   ,case when ppd.actual_start_time is not null then ppd.actual_start_time else psd.actual_start_time end as posting_date " +
+                            "   ,case when ppd.actual_start_time is not null then ppd.actual_start_time else ppd.scheduled_start_time end as posting_date " +
                             "   ,psd.actual_end_time as submitby_date " +
                             "   ,1 as level_id " +
                             "   ,pi1.value as complete_date  " +
