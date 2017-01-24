@@ -248,6 +248,9 @@ public class TCLoadProjects extends TCLoadTCSRedshift {
                             "            and pm2.most_recent_detail_id = pmd2.payment_detail_id and pmd2.payment_type_id IN (45, 57)  " +
                             "            AND NOT pmd2.payment_status_id IN (65, 68, 69)), 0)) as copilot_cost" +
 
+                            // task flag
+                            ",NVL((SELECT value FROM project_info pi82 WHERE pi82.project_id = p.project_id AND pi82.project_info_type_id = 82), 0) as task_ind" +
+
                             "   from project p , " +
                             "   project_info pir, " +
                             "   project_info pivers, " +
@@ -335,7 +338,7 @@ public class TCLoadProjects extends TCLoadTCSRedshift {
                     "challenge_manager = ?, challenge_creator = ?, challenge_launcher = ?, copilot = ?, checkpoint_start_date = ?, checkpoint_end_date = ?, " +
                     "registration_end_date = ?, scheduled_end_date = ?, checkpoint_prize_amount = ?, checkpoint_prize_number = ?, dr_points = ?, " +
                     "reliability_cost = ?, review_cost = ?, forum_id = ?, submission_viewable = ?, is_private = ?," +
-                    "estimated_reliability_cost = ?, estimated_review_cost = ?, estimated_copilot_cost = ?, estimated_admin_fee = ?, actual_total_prize = ?, copilot_cost = ?" +
+                    "estimated_reliability_cost = ?, estimated_review_cost = ?, estimated_copilot_cost = ?, estimated_admin_fee = ?, actual_total_prize = ?, copilot_cost = ?, task_ind = ?" +
                     "where project_id = ? ";
 
             final String INSERT = "insert into project (project_id, component_name, num_registrations, num_submissions, " +
@@ -348,14 +351,14 @@ public class TCLoadProjects extends TCLoadTCSRedshift {
                     "challenge_manager, challenge_creator, challenge_launcher, copilot, checkpoint_start_date, checkpoint_end_date," +
                     "registration_end_date, scheduled_end_date, checkpoint_prize_amount, checkpoint_prize_number, dr_points," +
                     "reliability_cost, review_cost, forum_id, submission_viewable, is_private," +
-                    "estimated_reliability_cost, estimated_review_cost, estimated_copilot_cost, estimated_admin_fee, actual_total_prize, copilot_cost)" +
+                    "estimated_reliability_cost, estimated_review_cost, estimated_copilot_cost, estimated_admin_fee, actual_total_prize, copilot_cost, task_ind)" +
                     "values (?, ?, ?, ?, ?, " +
                     "?, ?, ?, ?, ?, " +
                     "?, ?, ?, ?, ?, " +
                     "?, ?, ?, ?, ?, " +
                     "?, ?, ?, ?, ?, " +
                     "?, ?, ?, ?, ?, ?, ?, ?, ?, " +
-                    "?, ?, 'now', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
+                    "?, ?, 'now', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?) ";
 
             // Statements for updating the duration, fulfillment, start_date_calendar_id fields
             final String UPDATE_AGAIN = "UPDATE project SET " +
@@ -550,9 +553,10 @@ public class TCLoadProjects extends TCLoadTCSRedshift {
                     update.setDouble(59, rs.getDouble("estimated_admin_fee"));
                     update.setDouble(60, rs.getDouble("actual_total_prize"));
                     update.setDouble(61, rs.getDouble("copilot_cost"));
+                    update.setInt(62, rs.getInt("task_ind"));
 
 
-                    update.setLong(62, rs.getLong("project_id"));
+                    update.setLong(63, rs.getLong("project_id"));
                     System.out.println("------------project id --------------------------"+rs.getLong("project_id"));
 
                     int retVal = update.executeUpdate();
@@ -678,6 +682,7 @@ public class TCLoadProjects extends TCLoadTCSRedshift {
                         insert.setDouble(60, rs.getDouble("estimated_admin_fee"));
                         insert.setDouble(61, rs.getDouble("actual_total_prize"));
                         insert.setDouble(62, rs.getDouble("copilot_cost"));
+                        insert.setInt(63, rs.getInt("task_ind"));
 
                         insert.executeUpdate();
                     }
