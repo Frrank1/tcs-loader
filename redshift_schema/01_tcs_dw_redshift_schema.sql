@@ -53,7 +53,8 @@ CREATE TABLE tcs_dw.client_project_dim
    subscription_number         varchar(64),
    billing_account_status      integer,
    billing_account_start_date  timestamp,
-   billing_account_end_date    timestamp
+   billing_account_end_date    timestamp,
+   billing_account_budget      decimal(10,3)
 );
 
 GRANT INSERT, SELECT, DELETE, UNKNOWN, REFERENCES, UPDATE ON tcs_dw.client_project_dim TO tcs_dw;
