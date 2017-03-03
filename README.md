@@ -1,3 +1,8 @@
+# Overview
+This is a database loader utility that extracts, transforms, and loads (ETL) from a source database to a target database. It is currently used to move data from the Topcoder oltp/transactional database to the Topcoder Redshift data warehouse. This loader, as well as the Redshift database, is intended to eventually replace the existing Informix data warehouse and corresponding loaders. It is configurable so you can setup loader classes for specific data loads.  This makes it easy to split up loading tasks and run them on separate schedules.  For example, https://github.com/topcoder-platform/tcs-loader/blob/dev/scripts/loadpayments.xml tells the loader to run only the TCLoadPayments class, which can encapsulate the loader logic for payments.
+
+Each individual loader needs to have a numeric log_type.  The log_type is used to identify a specific loader and load times are logged for each log_type when they run.  This allows the loaders to understand when they performed the last load which is important for loaders that do incremental loads.
+
 # Deployment
 
 ## Preparing your environment
