@@ -208,6 +208,9 @@ CREATE TABLE tcs_dw.contest_project_xref
 
 GRANT INSERT, SELECT, DELETE, UNKNOWN, REFERENCES, UPDATE ON tcs_dw.contest_project_xref TO tcs_dw;
 
+alter table contest_project_xref
+add UNIQUE (project_id, contest_id);
+
 CREATE TABLE tcs_dw.contest_result
 (
    contest_id        numeric(12),
