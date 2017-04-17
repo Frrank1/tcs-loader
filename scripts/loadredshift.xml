@@ -13,7 +13,6 @@
             <classname>com.topcoder.utilities.dwload.tcsredshift.TCLoadContests</classname>
             <classname>com.topcoder.utilities.dwload.tcsredshift.TCLoadContestPrize</classname>
             <classname>com.topcoder.utilities.dwload.tcsredshift.TCLoadUserContestPrize</classname>
-            <classname>com.topcoder.utilities.dwload.tcsredshift.TCLoadClientProjectDim</classname>
             <classname>com.topcoder.utilities.dwload.tcsredshift.TCLoadDirectProjectDim</classname>
             <classname>com.topcoder.utilities.dwload.tcsredshift.TCLoadProjects</classname>
             <classname>com.topcoder.utilities.dwload.tcsredshift.TCLoadMarathonMatches</classname>
