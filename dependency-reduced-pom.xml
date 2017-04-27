@@ -52,6 +52,10 @@
   </build>
   <repositories>
     <repository>
+      <id>localrepository</id>
+      <url>file://${basedir}/repo</url>
+    </repository>
+    <repository>
       <id>central</id>
       <url>http://repo1.maven.org/maven2</url>
     </repository>

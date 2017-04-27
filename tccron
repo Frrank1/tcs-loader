@@ -1,0 +1,1 @@
+*/2 * * * * bash /usr/share/tc/app/scripts/loadredshiftscript.sh

@@ -52,7 +52,7 @@ public class TCLoadContests extends TCLoadTCSRedshift {
                     "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
 
             select = prepareStatement(SELECT, SOURCE_DB);
-            select.setTimestamp(1, fLastLogTime);
+            select.setTimestamp(1, java.sql.Timestamp.valueOf("2006-11-11 00:00:00"));
             update = prepareStatement(UPDATE, TARGET_DB);
             insert = prepareStatement(INSERT, TARGET_DB);
             rs = select.executeQuery();
@@ -60,7 +60,7 @@ public class TCLoadContests extends TCLoadTCSRedshift {
             int count = 0;
             while (rs.next()) {
                 count++;
-                //log.debug("PROCESSING CONTEST " + rs.getInt("contest_id"));
+                log.debug("PROCESSING CONTEST " + rs.getInt("contest_id"));
 
                 //update record, if 0 rows affected, insert record
                 update.clearParameters();
@@ -69,8 +69,10 @@ public class TCLoadContests extends TCLoadTCSRedshift {
                 update.setObject(3, rs.getObject("contest_end_timestamp"));
                 update.setObject(4, rs.getObject("contest_type_id"));
                 update.setObject(5, rs.getObject("contest_type_desc"));
-                update.setObject(6, rs.getObject("phase_id"));
-                update.setObject(7, rs.getObject("event_id"));
+                Object phaseId = rs.getObject("phase_id");
+                update.setObject(6, (phaseId != null ? phaseId : new Long(-1)));
+                Object eventId = rs.getObject("event_id");
+                update.setObject(7, (eventId != null ? eventId : new Long(-1)));
                 update.setObject(8, rs.getObject("project_category_id"));
                 update.setObject(9, rs.getObject("name"));
                 update.setLong(10, rs.getLong("contest_id"));
@@ -86,8 +88,8 @@ public class TCLoadContests extends TCLoadTCSRedshift {
                     insert.setObject(4, rs.getObject("contest_end_timestamp"));
                     insert.setObject(5, rs.getObject("contest_type_id"));
                     insert.setObject(6, rs.getObject("contest_type_desc"));
-                    insert.setObject(7, rs.getObject("phase_id"));
-                    insert.setObject(8, rs.getObject("event_id"));
+                    insert.setObject(7, (phaseId != null ? phaseId : new Long(-1)));
+                    insert.setObject(8, (eventId != null ? eventId : new Long(-1)));
                     insert.setObject(9, rs.getObject("project_category_id"));
                     insert.setObject(10, rs.getObject("name"));
 

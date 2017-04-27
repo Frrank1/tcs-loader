@@ -84,13 +84,17 @@
 		<dependency>
 			<groupId>com.amazon</groupId>
 			<artifactId>redshift.jdbc42</artifactId>
-			<version>1.1.17.1017</version>
+			<version>1.2.1.1001</version>
 		</dependency>
 		
 		
 	</dependencies>
 
 	<repositories>
+    <repository>
+         <id>localrepository</id>
+         <url>file://${basedir}/repo</url>
+      </repository>
 		<repository>  
 			<id>central</id>  
 			<url>http://repo1.maven.org/maven2</url>  
