@@ -183,3 +183,13 @@ is modified from TCLoadTCS to match the query syntax of Redshift, different
 behavior of the JDBC driver, etc. But the two files are mostly identical and the
 vast majority of the changes do not affect the logic or data in any significant
 way.
+
+## Connect Postgres Load to Redshift
+A new class TCLoadConnectProjects is added in the tcspostgresredshift folder.
+Its responsible for loading Connect Projects and Connect Members in the Redshift
+
+Script file : /scripts/loadconnectdatascript.sh
+Xml Config:   /scripts/loadConnectdata.xml
+
+Run : bash ./scripts/loadconnectdatascript.sh
+

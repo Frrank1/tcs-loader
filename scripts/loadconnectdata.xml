@@ -7,13 +7,13 @@
     </preload>
     <load>
         <classList>
-            <classname>com.topcoder.utilities.dwload.tcsredshift.TCLoadConnectProjects</classname>
+            <classname>com.topcoder.utilities.dwload.tcspostgresredshift.TCLoadConnectProjects</classname>
         </classList>
         <parameterList>
         </parameterList>
     </load>
     <postload>
         <classname>com.topcoder.utilities.dwload.tcsredshift.TCLoadTCSRedshiftPost</classname>
-        <parameter name="tcs_log_type" value="8"/>
+        <parameter name="tcs_log_type" value="21"/>
     </postload>
 </loadDefinition>
