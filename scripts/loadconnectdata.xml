@@ -4,6 +4,7 @@
     <targetdb>jdbc:redshift://__REDSHIFT_CLUSTER_ENDPOINT__:__PORT__/__DB_NAME__;PWD=__PASSWORD__;UID=__USERNAME__</targetdb>
     <preload>
         <classname>com.topcoder.utilities.dwload.tcsredshift.TCLoadTCSRedshiftPre</classname>
+        <parameter name="tcs_log_type">21</parameter>
     </preload>
     <load>
         <classList>

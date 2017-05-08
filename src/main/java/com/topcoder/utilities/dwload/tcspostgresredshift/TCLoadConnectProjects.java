@@ -26,32 +26,33 @@ public class TCLoadConnectProjects extends TCLoadTCSRedshift {
     }
 
     public void doLoadProjects() throws Exception {
-        log.info("load connect project");
+        log.info("load connect projects");
         PreparedStatement select = null;
         PreparedStatement insert = null;
         PreparedStatement update = null;
         ResultSet rs = null;
 
         final String SELECT = "select id, \"directProjectId\", \"billingAccountId\", name, external "
-                                + " ,description, bookmarks, utm, \"estimatedPrice\", \"actualPrice\", terms " 
-                                + " , status, details, \"challengeEligibility\", \"cancelReason\" "
+                                + " ,description, bookmarks, utm, \"estimatedPrice\", \"actualPrice\",terms,\"type\" " 
+                                + " ,status, details, \"challengeEligibility\", \"cancelReason\" "
                                 + " ,\"deletedAt\", \"createdAt\", \"updatedAt\", \"createdBy\", \"updatedBy\" "
-                                + " from projects order by id ";
+                                + " from projects order by id";
 
-        final String UPDATE = "update projects set directProjectId = ?,  billingAccountId = ?"
+        final String UPDATE = "update projects set \"directProjectId\" = ?,  \"billingAccountId\" = ?"
                                 + ", name = ?, external = ? , description = ? , bookmarks = ?, utm = ? "
-                                + ", estimatedPrice = ? , actualPrice = ?, status = ?"
-                                + ", details = ?, \"challengeEligibility\" = ?, cancelReason = ? "
-                                + ", deletedAt = ?, createdAt = ?, updatedAt = ?, createdBy = ? "
-                                + ", updatedBy = ?"
+                                + ", estimatedPrice = ? , actualPrice = ?,terms = ?, \"type\"= ?, status = ?"
+                                + ", details = ?, \"challengeEligibility\" = ?, \"cancelReason\" = ? "
+                                + ", \"deletedAt\" = ?, \"createdAt\" = ?, \"updatedAt\" = ?, \"createdBy\" = ? "
+                                + ", \"updatedBy\" = ?"
                                 + " where id = ?";
                    
-        final String INSERT = "insert into projects (id, directProjectId, billingAccountId"
+        final String INSERT = "insert into projects (id, \"directProjectId\", \"billingAccountId\""
                                 + " ,name, external "
-                                + " ,description, bookmarks, utm, estimatedPrice, actualPrice " 
-                                + " ,status, details, challengeEligibility, cancelReason "
-                                + " ,deletedAt, createdAt, updatedAt, createdBy, updatedBy )" +
-                    "values (?, ?, ?, ?, ? , ? , ? , ?, ? , ? , ?, ? , ?, ? , ?, ? , ?, ?, ?) ";
+                                + " ,description, bookmarks, utm, \"estimatedPrice\", \"actualPrice\" " 
+                                + " ,terms, type "
+                                + " ,status, details, \"challengeEligibility\", \"cancelReason\" "
+                                + " ,\"deletedAt\", \"createdAt\", \"updatedAt\", \"createdBy\", \"updatedBy\" )" +
+                    "values (?, ?, ?, ?, ? , ? , ? , ?, ?, ?, ? , ? , ?, ? , ?, ? , ?, ? , ?, ?, ?) ";
 
         try {
             long start = System.currentTimeMillis();
@@ -76,18 +77,18 @@ public class TCLoadConnectProjects extends TCLoadTCSRedshift {
                 update.setString(7, rs.getString("utm")); 
                 update.setDouble(8, rs.getDouble("estimatedPrice"));
                 update.setDouble(9, rs.getDouble("actualPrice")); 
-                //update.setObject(10, rs.getObject("terms"));
-                //update.setString(10, rs.getString("type"));
-                update.setString(10, rs.getString("status"));
-                update.setString(11, rs.getString("details"));
-                update.setString(12, rs.getString("challengeEligibility"));
-                update.setString(13, rs.getString("cancelReason"));
-                update.setTimestamp(14, rs.getTimestamp("deletedAt"));
-                update.setTimestamp(15, rs.getTimestamp("createdAt"));
-                update.setTimestamp(16, rs.getTimestamp("updatedAt"));
-                update.setLong(17, rs.getLong("createdBy")); 
-                update.setLong(18, rs.getLong("updatedBy")); 
-                update.setLong(19, rs.getLong("id"));     
+                update.setString(10, rs.getString("terms"));
+                update.setString(11, rs.getString("type"));
+                update.setString(12, rs.getString("status"));
+                update.setString(13, rs.getString("details"));
+                update.setString(14, rs.getString("challengeEligibility"));
+                update.setString(15, rs.getString("cancelReason"));
+                update.setTimestamp(16, rs.getTimestamp("deletedAt"));
+                update.setTimestamp(17, rs.getTimestamp("createdAt"));
+                update.setTimestamp(18, rs.getTimestamp("updatedAt"));
+                update.setLong(19, rs.getLong("createdBy")); 
+                update.setLong(20, rs.getLong("updatedBy")); 
+                update.setLong(21, rs.getLong("id"));     
                
                 int retVal = update.executeUpdate();
 
@@ -104,17 +105,17 @@ public class TCLoadConnectProjects extends TCLoadTCSRedshift {
                     insert.setString(8, rs.getString("utm"));
                     insert.setDouble(9, rs.getDouble("estimatedPrice"));
                     insert.setDouble(10, rs.getDouble("actualPrice"));
-                    //insert.setObject(11, rs.getObject("terms"))
-                    //insert.setString(11, rs.getString("type"));
-                    insert.setString(11, rs.getString("status"));
-                    insert.setString(12, rs.getString("details"));
-                    insert.setString(13, rs.getString("challengeEligibility"));
-                    insert.setString(14, rs.getString("cancelReason"));
-                    insert.setTimestamp(15, rs.getTimestamp("deletedAt"));
-                    insert.setTimestamp(16, rs.getTimestamp("createdAt"));
-                    insert.setTimestamp(17, rs.getTimestamp("updatedAt"));
-                    insert.setLong(18, rs.getLong("createdBy"));
-                    insert.setLong(19, rs.getLong("updatedBy"));
+                    insert.setString(11, rs.getString("terms"));
+                    insert.setString(12, rs.getString("type"));
+                    insert.setString(13, rs.getString("status"));
+                    insert.setString(14, rs.getString("details"));
+                    insert.setString(15, rs.getString("challengeEligibility"));
+                    insert.setString(16, rs.getString("cancelReason"));
+                    insert.setTimestamp(17, rs.getTimestamp("deletedAt"));
+                    insert.setTimestamp(18, rs.getTimestamp("createdAt"));
+                    insert.setTimestamp(19, rs.getTimestamp("updatedAt"));
+                    insert.setLong(20, rs.getLong("createdBy"));
+                    insert.setLong(21, rs.getLong("updatedBy"));
 
                     insert.executeUpdate();
                 }
@@ -125,7 +126,7 @@ public class TCLoadConnectProjects extends TCLoadTCSRedshift {
 
         } catch (SQLException sqle) {
             DBMS.printSqlException(true, sqle);
-            throw new Exception("Load of 'project' table failed.\n" +
+            throw new Exception("Load of 'projects' table failed.\n" +
                     sqle.getMessage());
         } finally {
             close(rs);
